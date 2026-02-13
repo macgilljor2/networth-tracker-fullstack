@@ -1,0 +1,39 @@
+# Build dependencies and cache
+__pycache__/
+*.pyc
+*.pyo
+.pyc
+.DS_Store
+.vscode/
+
+# Dependencies
+venv/
+.venv/
+virtualenv/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+.DS_Store
+Thumbs.db
+*.swp
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+.nox
+
+# Frontend and backend
+# Keep these tracked! Don't ignore the directories themselves

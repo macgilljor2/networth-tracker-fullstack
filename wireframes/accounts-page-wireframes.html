@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounts Page Wireframes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f0e8;
+            padding: 40px 20px;
+        }
+
+        .wireframe-section {
+            max-width: 1400px;
+            margin: 0 auto 80px;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .wireframe-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #3d3428;
+            margin-bottom: 8px;
+        }
+
+        .wireframe-description {
+            font-size: 14px;
+            color: #6d5c4a;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e5ddd3;
+        }
+
+        .wireframe-preview {
+            border: 1px solid #e5ddd3;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #faf8f5;
+        }
+
+        /* Beige Theme Colors */
+        :root {
+            --bg-primary: #f5f0e8;
+            --bg-secondary: #faf8f5;
+            --green-accent: #5a8f5a;
+            --green-dark: #3d6b3d;
+            --text-primary: #3d3428;
+            --text-secondary: #6d5c4a;
+            --border: #e5ddd3;
+            --beige-dark: #a89880;
+            --terracotta: #c17f59;
+            --sage: #7d8471;
+        }
+
+        /* Option 1: Dashboard Grid with Sparklines */
+        .option-1-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .option-1-title {
+            font-size: 24px;
+            color: var(--text-primary);
+        }
+
+        .option-1-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-primary {
+            background: var(--green-accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .option-1-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 24px;
+        }
+
+        .account-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .account-card-type {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--beige-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .account-card-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            padding-right: 60px;
+        }
+
+        .account-card-balance {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--green-accent);
+            margin-bottom: 12px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .account-card-sparkline {
+            height: 40px;
+            margin-bottom: 12px;
+        }
+
+        .sparkline-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .sparkline-path {
+            fill: none;
+            stroke: var(--green-accent);
+            stroke-width: 2;
+            opacity: 0.6;
+        }
+
+        .account-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Option 2: Split View Master-Detail */
+        .option-2-container {
+            display: flex;
+            height: 600px;
+        }
+
+        .option-2-sidebar {
+            width: 320px;
+            background: white;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+        }
+
+        .option-2-search {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .option-2-search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .option-2-list {
+            padding: 8px;
+        }
+
+        .option-2-list-item {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-2-list-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .option-2-list-item.active {
+            background: var(--green-accent);
+            color: white;
+        }
+
+        .option-2-item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .option-2-item-balance {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px;
+            color: var(--green-accent);
+        }
+
+        .option-2-list-item.active .option-2-item-balance {
+            color: white;
+        }
+
+        .option-2-detail {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        .option-2-detail-header {
+            margin-bottom: 32px;
+        }
+
+        .option-2-detail-title {
+            font-size: 32px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .option-2-detail-balance {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--green-accent);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .option-2-detail-chart {
+            height: 200px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        /* Option 3: Kanban Columns */
+        .option-3-header {
+            padding: 24px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .option-3-columns {
+            display: flex;
+            gap: 20px;
+            padding: 24px;
+            height: 500px;
+            overflow-x: auto;
+        }
+
+        .option-3-column {
+            flex: 0 0 280px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .option-3-column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid;
+        }
+
+        .option-3-column-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .option-3-column-count {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .option-3-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            cursor: grab;
+        }
+
+        .option-3-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .option-3-card-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .option-3-card-balance {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--green-accent);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Option 4: Visual Hierarchy */
+        .option-4-container {
+            padding: 24px;
+        }
+
+        .option-4-hero {
+            background: linear-gradient(135deg, var(--green-accent) 0%, var(--green-dark) 100%);
+            border-radius: 16px;
+            padding: 40px;
+            color: white;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-4-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .option-4-hero-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .option-4-hero-balance {
+            font-size: 64px;
+            font-weight: 700;
+            font-family: 'Share Tech Mono', monospace;
+            margin-bottom: 16px;
+        }
+
+        .option-4-hero-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .option-4-accounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .option-4-mini-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        .option-4-mini-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .option-4-mini-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .option-4-mini-balance {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* Option 5: List View with Expandable Rows */
+        .option-5-header {
+            padding: 24px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .option-5-table {
+            background: white;
+        }
+
+        .option-5-row {
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .option-5-row-main {
+            display: grid;
+            grid-template-columns: 40px 2fr 1fr 1fr 1fr 120px;
+            gap: 16px;
+            padding: 16px 24px;
+            align-items: center;
+        }
+
+        .option-5-row-main:hover {
+            background: var(--bg-secondary);
+        }
+
+        .option-5-row-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--green-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .option-5-row-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .option-5-row-type {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: capitalize;
+        }
+
+        .option-5-row-balance {
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: 600;
+            color: var(--green-accent);
+            font-size: 16px;
+        }
+
+        .option-5-row-trend {
+            font-size: 13px;
+        }
+
+        .option-5-trend-up {
+            color: var(--green-accent);
+        }
+
+        .option-5-trend-down {
+            color: var(--terracotta);
+        }
+
+        .option-5-row-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .option-5-btn-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .option-5-expanded {
+            display: none;
+            padding: 24px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+        }
+
+        .option-5-row.expanded .option-5-expanded {
+            display: block;
+        }
+
+        /* Option 6: Compact Grid with Quick Actions */
+        .option-6-header {
+            padding: 24px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-6-tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .option-6-tab {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .option-6-tab.active {
+            background: white;
+            color: var(--text-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .option-6-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            padding: 24px;
+        }
+
+        .option-6-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .option-6-card-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .option-6-card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--sage);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .option-6-card-menu {
+            color: var(--beige-dark);
+            cursor: pointer;
+        }
+
+        .option-6-card-body {
+            padding: 16px;
+        }
+
+        .option-6-card-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .option-6-card-balance {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .option-6-card-footer {
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-6-card-change {
+            font-size: 12px;
+            color: var(--green-accent);
+        }
+
+        .option-6-card-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .option-6-action-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .option-6-action-btn:hover {
+            background: var(--green-accent);
+            color: white;
+        }
+
+        /* Labels */
+        .wireframe-label {
+            position: absolute;
+            background: #3d3428;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- OPTION 1: Dashboard Grid with Sparklines -->
+    <div class="wireframe-section">
+        <h1 class="wireframe-title">Option 1: Dashboard Grid with Sparklines</h1>
+        <p class="wireframe-description">Traditional card layout with mini charts showing balance trends. Good overview of all accounts at a glance with visual trend indicators.</p>
+
+        <div class="wireframe-preview">
+            <div class="option-1-header">
+                <div class="option-1-title">Accounts</div>
+                <div class="option-1-actions">
+                    <button class="btn-secondary">Add Balance</button>
+                    <button class="btn-primary">+ Add Account</button>
+                </div>
+            </div>
+
+            <div class="option-1-grid">
+                <div class="account-card">
+                    <div class="account-card-type">Savings</div>
+                    <div class="account-card-name">Main Savings</div>
+                    <div class="account-card-balance">£12,450.00</div>
+                    <div class="account-card-sparkline">
+                        <svg class="sparkline-svg" viewBox="0 0 100 40">
+                            <path class="sparkline-path" d="M0,30 Q10,28 20,25 T40,20 T60,15 T80,10 T100,5"/>
+                        </svg>
+                    </div>
+                    <div class="account-card-meta">
+                        <span>Updated today</span>
+                        <span>↑ 12.3%</span>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <div class="account-card-type">Checking</div>
+                    <div class="account-card-name">Current Account</div>
+                    <div class="account-card-balance">£3,240.50</div>
+                    <div class="account-card-sparkline">
+                        <svg class="sparkline-svg" viewBox="0 0 100 40">
+                            <path class="sparkline-path" d="M0,35 Q20,30 40,32 T60,28 T80,25 T100,20"/>
+                        </svg>
+                    </div>
+                    <div class="account-card-meta">
+                        <span>Updated today</span>
+                        <span>↑ 5.1%</span>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <div class="account-card-type">Investment</div>
+                    <div class="account-card-name">Stocks & Shares</div>
+                    <div class="account-card-balance">£28,930.00</div>
+                    <div class="account-card-sparkline">
+                        <svg class="sparkline-svg" viewBox="0 0 100 40">
+                            <path class="sparkline-path" d="M0,20 Q20,25 40,18 T60,22 T80,15 T100,10" style="stroke: #c17f59"/>
+                        </svg>
+                    </div>
+                    <div class="account-card-meta">
+                        <span>Updated yesterday</span>
+                        <span style="color: #c17f59">↓ 2.4%</span>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <div class="account-card-type">Credit Card</div>
+                    <div class="account-card-name">Mastercard</div>
+                    <div class="account-card-balance" style="color: #c17f59">-£1,450.00</div>
+                    <div class="account-card-sparkline">
+                        <svg class="sparkline-svg" viewBox="0 0 100 40">
+                            <path class="sparkline-path" d="M0,10 Q20,12 40,15 T60,18 T80,25 T100,30" style="stroke: #c17f59"/>
+                        </svg>
+                    </div>
+                    <div class="account-card-meta">
+                        <span>Updated today</span>
+                        <span style="color: #c17f59">↑ 8.2%</span>
+                    </div>
+                </div>
+
+                <div class="account-card">
+                    <div class="account-card-type">Savings</div>
+                    <div class="account-card-name">Emergency Fund</div>
+                    <div class="account-card-balance">£15,000.00</div>
+                    <div class="account-card-sparkline">
+                        <svg class="sparkline-svg" viewBox="0 0 100 40">
+                            <path class="sparkline-path" d="M0,32 Q20,30 40,28 T60,25 T80,22 T100,18"/>
+                        </svg>
+                    </div>
+                    <div class="account-card-meta">
+                        <span>Updated 3 days ago</span>
+                        <span>↑ 3.7%</span>
+                    </div>
+                </div>
+
+                <div class="account-card" style="border-style: dashed; background: #faf8f5;">
+                    <div class="account-card-type" style="opacity: 0.5;">New</div>
+                    <div class="account-card-name" style="color: #a89880;">+ Add Account</div>
+                    <div class="account-card-balance" style="color: #a89880; font-size: 20px;">Track another account</div>
+                    <div class="account-card-sparkline"></div>
+                    <div class="account-card-meta">
+                        <span style="opacity: 0.5;">Click to add</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 2: Split View Master-Detail -->
+    <div class="wireframe-section">
+        <h1 class="wireframe-title">Option 2: Split View Master-Detail</h1>
+        <p class="wireframe-description">Sidebar list with detailed view on the right. Great for drilling into specific accounts while maintaining context of the full list. Professional and information-dense.</p>
+
+        <div class="wireframe-preview">
+            <div class="option-2-container">
+                <div class="option-2-sidebar">
+                    <div class="option-2-search">
+                        <input type="text" class="option-2-search-input" placeholder="Search accounts...">
+                    </div>
+
+                    <div class="option-2-list">
+                        <div class="option-2-list-item active">
+                            <div class="option-2-item-name">Main Savings</div>
+                            <div class="option-2-item-balance">£12,450.00</div>
+                        </div>
+
+                        <div class="option-2-list-item">
+                            <div class="option-2-item-name">Current Account</div>
+                            <div class="option-2-item-balance">£3,240.50</div>
+                        </div>
+
+                        <div class="option-2-list-item">
+                            <div class="option-2-item-name">Stocks & Shares</div>
+                            <div class="option-2-item-balance">£28,930.00</div>
+                        </div>
+
+                        <div class="option-2-list-item">
+                            <div class="option-2-item-name">Mastercard</div>
+                            <div class="option-2-item-balance">-£1,450.00</div>
+                        </div>
+
+                        <div class="option-2-list-item">
+                            <div class="option-2-item-name">Emergency Fund</div>
+                            <div class="option-2-item-balance">£15,000.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-2-detail">
+                    <div class="option-2-detail-header">
+                        <div style="font-size: 13px; color: #6d5c4a; margin-bottom: 8px;">Savings Account</div>
+                        <div class="option-2-detail-title">Main Savings</div>
+                        <div class="option-2-detail-balance">£12,450.00</div>
+                    </div>
+
+                    <div class="option-2-detail-chart">
+                        [ Balance History Chart ]
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5ddd3;">
+                            <div style="font-size: 12px; color: #6d5c4a; margin-bottom: 8px;">This Month</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #3d3428;">+£450</div>
+                            <div style="font-size: 12px; color: #5a8f5a;">↑ 3.8%</div>
+                        </div>
+
+                        <div style="background: white; padding: 20px; border-radius: 12px; border: 1px solid #e5ddd3;">
+                            <div style="font-size: 12px; color: #6d5c4a; margin-bottom: 8px;">All Time</div>
+                            <div style="font-size: 24px; font-weight: 700; color: #3d3428;">+£2,450</div>
+                            <div style="font-size: 12px; color: #5a8f5a;">↑ 24.5%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 3: Kanban Columns by Type -->
+    <div class="wireframe-section">
+        <h1 class="wireframe-title">Option 3: Kanban Columns by Account Type</h1>
+        <p class="wireframe-description">Accounts organized into columns by type (Assets, Liabilities, Investments). Visual grouping helps categorize accounts mentally. Good for managing many accounts.</p>
+
+        <div class="wireframe-preview">
+            <div class="option-3-header">
+                <div style="font-size: 24px; color: #3d3428;">Accounts</div>
+            </div>
+
+            <div class="option-3-columns">
+                <div class="option-3-column">
+                    <div class="option-3-column-header" style="border-color: #5a8f5a;">
+                        <div class="option-3-column-title">💰 Assets</div>
+                        <div class="option-3-column-count">3</div>
+                    </div>
+
+                    <div class="option-3-card">
+                        <div class="option-3-card-name">Main Savings</div>
+                        <div class="option-3-card-balance">£12,450.00</div>
+                        <div style="font-size: 11px; color: #6d5c4a; margin-top: 8px;">Updated today</div>
+                    </div>
+
+                    <div class="option-3-card">
+                        <div class="option-3-card-name">Current Account</div>
+                        <div class="option-3-card-balance">£3,240.50</div>
+                        <div style="font-size: 11px; color: #6d5c4a; margin-top: 8px;">Updated today</div>
+                    </div>
+
+                    <div class="option-3-card">
+                        <div class="option-3-card-name">Emergency Fund</div>
+                        <div class="option-3-card-balance">£15,000.00</div>
+                        <div style="font-size: 11px; color: #6d5c4a; margin-top: 8px;">Updated 3 days ago</div>
+                    </div>
+                </div>
+
+                <div class="option-3-column">
+                    <div class="option-3-column-header" style="border-color: #7d8471;">
+                        <div class="option-3-column-title">📈 Investments</div>
+                        <div class="option-3-column-count">2</div>
+                    </div>
+
+                    <div class="option-3-card">
+                        <div class="option-3-card-name">Stocks & Shares</div>
+                        <div class="option-3-card-balance">£28,930.00</div>
+                        <div style="font-size: 11px; color: #c17f59; margin-top: 8px;">↓ 2.4% this month</div>
+                    </div>
+
+                    <div class="option-3-card">
+                        <div class="option-3-card-name">Crypto Wallet</div>
+                        <div class="option-3-card-balance">£2,150.00</div>
+                        <div style="font-size: 11px; color: #5a8f5a; margin-top: 8px;">↑ 8.7% this month</div>
+                    </div>
+                </div>
+
+                <div class="option-3-column">
+                    <div class="option-3-column-header" style="border-color: #c17f59;">
+                        <div class="option-3-column-title">💳 Liabilities</div>
+                        <div class="option-3-column-count">1</div>
+                    </div>
+
+                    <div class="option-3-card">
+                        <div class="option-3-card-name">Mastercard</div>
+                        <div class="option-3-card-balance" style="color: #c17f59;">-£1,450.00</div>
+                        <div style="font-size: 11px; color: #6d5c4a; margin-top: 8px;">Updated today</div>
+                    </div>
+                </div>
+
+                <div class="option-3-column" style="border: 2px dashed #e5ddd3; background: transparent;">
+                    <div class="option-3-column-header" style="border-color: #a89880;">
+                        <div class="option-3-column-title">+ New Account</div>
+                    </div>
+                    <div style="padding: 16px; text-align: center; color: #a89880;">
+                        Drag accounts here to create custom groups
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 4: Visual Hierarchy -->
+    <div class="wireframe-section">
+        <h1 class="wireframe-title">Option 4: Visual Hierarchy with Hero Balance</h1>
+        <p class="wireframe-description">Large featured total balance at top with smaller account cards below. Emphasizes overall net worth. Clean, impactful design focused on the big picture.</p>
+
+        <div class="wireframe-preview">
+            <div class="option-4-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <div style="font-size: 24px; color: #3d3428;">Accounts</div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn-secondary">Add Balance</button>
+                        <button class="btn-primary">+ Add Account</button>
+                    </div>
+                </div>
+
+                <div class="option-4-hero">
+                    <div class="option-4-hero-label">Total Net Worth</div>
+                    <div class="option-4-hero-balance">£60,320.50</div>
+                    <div class="option-4-hero-change">
+                        <span>↑ £2,340.50</span>
+                        <span>from last month</span>
+                    </div>
+                </div>
+
+                <div class="option-4-accounts">
+                    <div class="option-4-mini-card">
+                        <div class="option-4-mini-name">Main Savings</div>
+                        <div class="option-4-mini-balance">£12,450</div>
+                    </div>
+
+                    <div class="option-4-mini-card">
+                        <div class="option-4-mini-name">Stocks & Shares</div>
+                        <div class="option-4-mini-balance">£28,930</div>
+                    </div>
+
+                    <div class="option-4-mini-card">
+                        <div class="option-4-mini-name">Emergency Fund</div>
+                        <div class="option-4-mini-balance">£15,000</div>
+                    </div>
+
+                    <div class="option-4-mini-card">
+                        <div class="option-4-mini-name">Current Account</div>
+                        <div class="option-4-mini-balance">£3,241</div>
+                    </div>
+
+                    <div class="option-4-mini-card">
+                        <div class="option-4-mini-name">Crypto Wallet</div>
+                        <div class="option-4-mini-balance">£2,150</div>
+                    </div>
+
+                    <div class="option-4-mini-card" style="border-style: dashed; background: transparent;">
+                        <div class="option-4-mini-name" style="color: #a89880;">+ Add Account</div>
+                        <div class="option-4-mini-balance" style="color: #a89880; font-size: 16px;">Track more</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 5: Expandable List View -->
+    <div class="wireframe-section">
+        <h1 class="wireframe-title">Option 5: Expandable List View</h1>
+        <p class="wireframe-description">Clean table rows that expand to show more details. Compact default view with ability to drill in. Professional and data-focused approach.</p>
+
+        <div class="wireframe-preview">
+            <div class="option-5-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 24px; color: #3d3428;">Accounts</div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="btn-secondary">Grid View</button>
+                        <button class="btn-primary">List View</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="option-5-table">
+                <div class="option-5-row expanded">
+                    <div class="option-5-row-main">
+                        <div class="option-5-row-icon">💰</div>
+                        <div class="option-5-row-name">Main Savings</div>
+                        <div class="option-5-row-type">Savings</div>
+                        <div class="option-5-row-balance">£12,450.00</div>
+                        <div class="option-5-row-trend option-5-trend-up">↑ 12.3%</div>
+                        <div class="option-5-row-actions">
+                            <div class="option-5-btn-icon">+</div>
+                            <div class="option-5-btn-icon">⋯</div>
+                        </div>
+                    </div>
+                    <div class="option-5-expanded">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 20px;">
+                            <div>
+                                <div style="font-size: 11px; color: #6d5c4a; margin-bottom: 4px;">Currency</div>
+                                <div style="font-weight: 600;">GBP (£)</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 11px; color: #6d5c4a; margin-bottom: 4px;">Last Updated</div>
+                                <div style="font-weight: 600;">Today, 2:30 PM</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 11px; color: #6d5c4a; margin-bottom: 4px;">Balance History</div>
+                                <div style="font-weight: 600;">8 entries</div>
+                            </div>
+                        </div>
+                        <div style="height: 100px; background: white; border-radius: 8px; border: 1px solid #e5ddd3; display: flex; align-items: center; justify-content: center; color: #6d5c4a;">
+                            [ Mini Balance Chart ]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-5-row">
+                    <div class="option-5-row-main">
+                        <div class="option-5-row-icon" style="background: #7d8471;">📈</div>
+                        <div class="option-5-row-name">Stocks & Shares</div>
+                        <div class="option-5-row-type">Investment</div>
+                        <div class="option-5-row-balance">£28,930.00</div>
+                        <div class="option-5-row-trend option-5-trend-down">↓ 2.4%</div>
+                        <div class="option-5-row-actions">
+                            <div class="option-5-btn-icon">+</div>
+                            <div class="option-5-btn-icon">⋯</div>
+                        </div>
+                    </div>
+                    <div class="option-5-expanded"></div>
+                </div>
+
+                <div class="option-5-row">
+                    <div class="option-5-row-main">
+                        <div class="option-5-row-icon" style="background: #5a8f5a;">💳</div>
+                        <div class="option-5-row-name">Current Account</div>
+                        <div class="option-5-row-type">Checking</div>
+                        <div class="option-5-row-balance">£3,240.50</div>
+                        <div class="option-5-row-trend option-5-trend-up">↑ 5.1%</div>
+                        <div class="option-5-row-actions">
+                            <div class="option-5-btn-icon">+</div>
+                            <div class="option-5-btn-icon">⋯</div>
+                        </div>
+                    </div>
+                    <div class="option-5-expanded"></div>
+                </div>
+
+                <div class="option-5-row">
+                    <div class="option-5-row-main">
+                        <div class="option-5-row-icon" style="background: #c17f59;">💳</div>
+                        <div class="option-5-row-name">Mastercard</div>
+                        <div class="option-5-row-type">Credit Card</div>
+                        <div class="option-5-row-balance" style="color: #c17f59;">-£1,450.00</div>
+                        <div class="option-5-row-trend option-5-trend-up">↑ 8.2%</div>
+                        <div class="option-5-row-actions">
+                            <div class="option-5-btn-icon">+</div>
+                            <div class="option-5-btn-icon">⋯</div>
+                        </div>
+                    </div>
+                    <div class="option-5-expanded"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 6: Compact Grid with Quick Actions -->
+    <div class="wireframe-section">
+        <h1 class="wireframe-title">Option 6: Compact Grid with Quick Actions</h1>
+        <p class="wireframe-description">Dense 4-column grid with tab-based filtering. Each card shows just essential info with quick-action buttons. Maximize accounts per screen while maintaining usability.</p>
+
+        <div class="wireframe-preview">
+            <div class="option-6-header">
+                <div style="font-size: 24px; color: #3d3428;">Accounts</div>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <div class="option-6-tabs">
+                        <div class="option-6-tab active">All</div>
+                        <div class="option-6-tab">Assets</div>
+                        <div class="option-6-tab">Investments</div>
+                        <div class="option-6-tab">Liabilities</div>
+                    </div>
+                    <button class="btn-primary">+ Add</button>
+                </div>
+            </div>
+
+            <div class="option-6-grid">
+                <div class="option-6-card">
+                    <div class="option-6-card-header">
+                        <div class="option-6-card-icon">💰</div>
+                        <div class="option-6-card-menu">⋯</div>
+                    </div>
+                    <div class="option-6-card-body">
+                        <div class="option-6-card-name">Main Savings</div>
+                        <div class="option-6-card-balance">£12,450</div>
+                    </div>
+                    <div class="option-6-card-footer">
+                        <div class="option-6-card-change">↑ 12.3%</div>
+                        <div class="option-6-card-actions">
+                            <button class="option-6-action-btn">+</button>
+                            <button class="option-6-action-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-6-card">
+                    <div class="option-6-card-header">
+                        <div class="option-6-card-icon" style="background: #7d8471;">📈</div>
+                        <div class="option-6-card-menu">⋯</div>
+                    </div>
+                    <div class="option-6-card-body">
+                        <div class="option-6-card-name">Stocks & Shares</div>
+                        <div class="option-6-card-balance">£28,930</div>
+                    </div>
+                    <div class="option-6-card-footer">
+                        <div class="option-6-card-change" style="color: #c17f59;">↓ 2.4%</div>
+                        <div class="option-6-card-actions">
+                            <button class="option-6-action-btn">+</button>
+                            <button class="option-6-action-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-6-card">
+                    <div class="option-6-card-header">
+                        <div class="option-6-card-icon" style="background: #5a8f5a;">💳</div>
+                        <div class="option-6-card-menu">⋯</div>
+                    </div>
+                    <div class="option-6-card-body">
+                        <div class="option-6-card-name">Current Account</div>
+                        <div class="option-6-card-balance">£3,241</div>
+                    </div>
+                    <div class="option-6-card-footer">
+                        <div class="option-6-card-change">↑ 5.1%</div>
+                        <div class="option-6-card-actions">
+                            <button class="option-6-action-btn">+</button>
+                            <button class="option-6-action-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-6-card">
+                    <div class="option-6-card-header">
+                        <div class="option-6-card-icon">💰</div>
+                        <div class="option-6-card-menu">⋯</div>
+                    </div>
+                    <div class="option-6-card-body">
+                        <div class="option-6-card-name">Emergency Fund</div>
+                        <div class="option-6-card-balance">£15,000</div>
+                    </div>
+                    <div class="option-6-card-footer">
+                        <div class="option-6-card-change">↑ 3.7%</div>
+                        <div class="option-6-card-actions">
+                            <button class="option-6-action-btn">+</button>
+                            <button class="option-6-action-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-6-card">
+                    <div class="option-6-card-header">
+                        <div class="option-6-card-icon" style="background: #c17f59;">💳</div>
+                        <div class="option-6-card-menu">⋯</div>
+                    </div>
+                    <div class="option-6-card-body">
+                        <div class="option-6-card-name">Mastercard</div>
+                        <div class="option-6-card-balance" style="color: #c17f59;">-£1,450</div>
+                    </div>
+                    <div class="option-6-card-footer">
+                        <div class="option-6-card-change">↑ 8.2%</div>
+                        <div class="option-6-card-actions">
+                            <button class="option-6-action-btn">+</button>
+                            <button class="option-6-action-btn">→</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="option-6-card" style="border-style: dashed; background: #faf8f5;">
+                    <div class="option-6-card-header">
+                        <div class="option-6-card-icon" style="background: #a89880;">+</div>
+                    </div>
+                    <div class="option-6-card-body">
+                        <div class="option-6-card-name" style="color: #a89880;">Add Account</div>
+                    </div>
+                    <div class="option-6-card-footer" style="justify-content: center;">
+                        <div style="font-size: 11px; color: #a89880;">Click to add</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

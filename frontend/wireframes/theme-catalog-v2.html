@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Catalog v2 - Net Worth Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #888;
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 16px;
+        }
+
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .theme-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .theme-header {
+            padding: 30px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .theme-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .theme-desc {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .preview {
+            padding: 30px;
+        }
+
+        .ui-element {
+            margin-bottom: 20px;
+        }
+
+        .ui-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+
+        /* ========== NORDIC THEME ========== */
+        .theme-nordic {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .theme-nordic .theme-header {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        .theme-nordic .ui-label {
+            color: #64748b;
+        }
+        .theme-nordic .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .theme-nordic .btn-primary {
+            background: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+        }
+        .theme-nordic .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #334155;
+        }
+        .theme-nordic .accent-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #334155 0%, #475569 50%, #94a3b8 100%);
+        }
+
+        /* ========== MINIMAL MONO THEME ========== */
+        .theme-mono {
+            background: #ffffff;
+        }
+        .theme-mono .theme-header {
+            background: #000000;
+            color: #ffffff;
+        }
+        .theme-mono .ui-label {
+            color: #666;
+        }
+        .theme-mono .card {
+            background: #fafafa;
+            border: 2px solid #000000;
+            border-radius: 0;
+            padding: 20px;
+        }
+        .theme-mono .btn-primary {
+            background: #000000;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 0;
+            border: none;
+            font-weight: 600;
+        }
+        .theme-mono .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #000000;
+        }
+        .theme-mono .accent-bar {
+            height: 8px;
+            border-radius: 0;
+            background: linear-gradient(90deg, #000000 0%, #333333 50%, #666666 100%);
+        }
+
+        /* ========== JEWEL THEME ========== */
+        .theme-jewel {
+            background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+        }
+        .theme-jewel .theme-header {
+            background: #86198f;
+            color: white;
+        }
+        .theme-jewel .ui-label {
+            color: #a21caf;
+        }
+        .theme-jewel .card {
+            background: white;
+            border: 1px solid #f0abfc;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .theme-jewel .btn-primary {
+            background: linear-gradient(135deg, #86198f 0%, #701a75 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+        }
+        .theme-jewel .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #86198f;
+        }
+        .theme-jewel .accent-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #86198f 0%, #d946ef 50%, #f472b6 100%);
+        }
+
+        /* ========== AUTUMN THEME ========== */
+        .theme-autumn {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+        }
+        .theme-autumn .theme-header {
+            background: #d97706;
+            color: white;
+        }
+        .theme-autumn .ui-label {
+            color: #b45309;
+        }
+        .theme-autumn .card {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .theme-autumn .btn-primary {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+        }
+        .theme-autumn .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #d97706;
+        }
+        .theme-autumn .accent-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #d97706 0%, #f59e0b 50%, #dc2626 100%);
+        }
+
+        /* ========== DESERT THEME ========== */
+        .theme-desert {
+            background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+        }
+        .theme-desert .theme-header {
+            background: #a16207;
+            color: white;
+        }
+        .theme-desert .ui-label {
+            color: #854d0e;
+        }
+        .theme-desert .card {
+            background: #fffde7;
+            border: 1px solid #fef08a;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .theme-desert .btn-primary {
+            background: linear-gradient(135deg, #a16207 0%, #854d0e 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+        }
+        .theme-desert .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #a16207;
+        }
+        .theme-desert .accent-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #a16207 0%, #ca8a04 50%, #78350f 100%);
+        }
+
+        /* ========== SAGE THEME ========== */
+        .theme-sage {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+        .theme-sage .theme-header {
+            background: #4d7c0f;
+            color: white;
+        }
+        .theme-sage .ui-label {
+            color: #3f6212;
+        }
+        .theme-sage .card {
+            background: #f7fee7;
+            border: 1px solid #bef264;
+            border-radius: 16px;
+            padding: 20px;
+        }
+        .theme-sage .btn-primary {
+            background: linear-gradient(135deg, #4d7c0f 0%, #3f6212 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+        }
+        .theme-sage .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 36px;
+            font-weight: bold;
+            color: #4d7c0f;
+        }
+        .theme-sage .accent-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4d7c0f 0%, #84cc16 50%, #65a30d 100%);
+        }
+
+        .accent-box {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .accent-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Theme Catalog v2</h1>
+    <p class="subtitle">New theme options - Pick 3 to implement alongside Beige & Earth</p>
+
+    <div class="catalog">
+        <!-- NORDIC THEME -->
+        <div class="theme-card theme-nordic">
+            <div class="theme-header">
+                <div class="theme-name">1. Nordic Cool</div>
+                <div class="theme-desc">Scandinavian minimalism - Clean whites, soft grays, understated elegance</div>
+            </div>
+            <div class="preview">
+                <div class="ui-element">
+                    <div class="ui-label">Accent Colors</div>
+                    <div class="accent-bar"></div>
+                    <div class="accent-box">
+                        <div class="accent-swatch" style="background: #334155;"></div>
+                        <div class="accent-swatch" style="background: #475569;"></div>
+                        <div class="accent-swatch" style="background: #94a3b8;"></div>
+                        <div class="accent-swatch" style="background: #cbd5e1;"></div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Balance Display</div>
+                    <div class="balance">£124,592.66</div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Card Component</div>
+                    <div class="card">
+                        <div style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Total Balance</div>
+                        <div style="font-size: 24px; font-weight: bold; color: #334155;">£45,230.00</div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Primary Button</div>
+                    <button class="btn-primary">Add Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MINIMAL MONO THEME -->
+        <div class="theme-card theme-mono">
+            <div class="theme-header">
+                <div class="theme-name">2. Minimal Mono</div>
+                <div class="theme-desc">Pure black & white - Stark contrast, Swiss design influence</div>
+            </div>
+            <div class="preview">
+                <div class="ui-element">
+                    <div class="ui-label">Accent Colors</div>
+                    <div class="accent-bar"></div>
+                    <div class="accent-box">
+                        <div class="accent-swatch" style="background: #000000;"></div>
+                        <div class="accent-swatch" style="background: #333333;"></div>
+                        <div class="accent-swatch" style="background: #666666;"></div>
+                        <div class="accent-swatch" style="background: #999999;"></div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Balance Display</div>
+                    <div class="balance">£124,592.66</div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Card Component</div>
+                    <div class="card">
+                        <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Total Balance</div>
+                        <div style="font-size: 24px; font-weight: bold; color: #000;">£45,230.00</div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Primary Button</div>
+                    <button class="btn-primary">Add Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- JEWEL THEME -->
+        <div class="theme-card theme-jewel">
+            <div class="theme-header">
+                <div class="theme-name">3. Jewel Tones</div>
+                <div class="theme-desc">Rich amethyst & fuchsia - Luxurious, vibrant, royal</div>
+            </div>
+            <div class="preview">
+                <div class="ui-element">
+                    <div class="ui-label">Accent Colors</div>
+                    <div class="accent-bar"></div>
+                    <div class="accent-box">
+                        <div class="accent-swatch" style="background: #86198f;"></div>
+                        <div class="accent-swatch" style="background: #d946ef;"></div>
+                        <div class="accent-swatch" style="background: #f472b6;"></div>
+                        <div class="accent-swatch" style="background: #14b8a6;"></div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Balance Display</div>
+                    <div class="balance">£124,592.66</div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Card Component</div>
+                    <div class="card">
+                        <div style="font-size: 14px; color: #a21caf; margin-bottom: 8px;">Total Balance</div>
+                        <div style="font-size: 24px; font-weight: bold; color: #701a75;">£45,230.00</div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Primary Button</div>
+                    <button class="btn-primary">Add Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AUTUMN THEME -->
+        <div class="theme-card theme-autumn">
+            <div class="theme-header">
+                <div class="theme-name">4. Autumn Harvest</div>
+                <div class="theme-desc">Golden ambers & warm reds - Cozy fall colors, comforting</div>
+            </div>
+            <div class="preview">
+                <div class="ui-element">
+                    <div class="ui-label">Accent Colors</div>
+                    <div class="accent-bar"></div>
+                    <div class="accent-box">
+                        <div class="accent-swatch" style="background: #d97706;"></div>
+                        <div class="accent-swatch" style="background: #f59e0b;"></div>
+                        <div class="accent-swatch" style="background: #dc2626;"></div>
+                        <div class="accent-swatch" style="background: #ea580c;"></div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Balance Display</div>
+                    <div class="balance">£124,592.66</div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Card Component</div>
+                    <div class="card">
+                        <div style="font-size: 14px; color: #b45309; margin-bottom: 8px;">Total Balance</div>
+                        <div style="font-size: 24px; font-weight: bold; color: #92400e;">£45,230.00</div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Primary Button</div>
+                    <button class="btn-primary">Add Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESERT THEME -->
+        <div class="theme-card theme-desert">
+            <div class="theme-header">
+                <div class="theme-name">5. Desert Sand</div>
+                <div class="theme-desc">Warm yellows & earthy golds - Southwestern, sunny, natural</div>
+            </div>
+            <div class="preview">
+                <div class="ui-element">
+                    <div class="ui-label">Accent Colors</div>
+                    <div class="accent-bar"></div>
+                    <div class="accent-box">
+                        <div class="accent-swatch" style="background: #a16207;"></div>
+                        <div class="accent-swatch" style="background: #ca8a04;"></div>
+                        <div class="accent-swatch" style="background: #78350f;"></div>
+                        <div class="accent-swatch" style="background: #a3e635;"></div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Balance Display</div>
+                    <div class="balance">£124,592.66</div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Card Component</div>
+                    <div class="card">
+                        <div style="font-size: 14px; color: #854d0e; margin-bottom: 8px;">Total Balance</div>
+                        <div style="font-size: 24px; font-weight: bold; color: #713f12;">£45,230.00</div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Primary Button</div>
+                    <button class="btn-primary">Add Account</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAGE THEME -->
+        <div class="theme-card theme-sage">
+            <div class="theme-header">
+                <div class="theme-name">6. Sage Garden</div>
+                <div class="theme-desc">Soft olive greens - Herbal, calming, organic</div>
+            </div>
+            <div class="preview">
+                <div class="ui-element">
+                    <div class="ui-label">Accent Colors</div>
+                    <div class="accent-bar"></div>
+                    <div class="accent-box">
+                        <div class="accent-swatch" style="background: #4d7c0f;"></div>
+                        <div class="accent-swatch" style="background: #84cc16;"></div>
+                        <div class="accent-swatch" style="background: #65a30d;"></div>
+                        <div class="accent-swatch" style="background: #16a34a;"></div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Balance Display</div>
+                    <div class="balance">£124,592.66</div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Card Component</div>
+                    <div class="card">
+                        <div style="font-size: 14px; color: #3f6212; margin-bottom: 8px;">Total Balance</div>
+                        <div style="font-size: 24px; font-weight: bold; color: #365314;">£45,230.00</div>
+                    </div>
+                </div>
+                <div class="ui-element">
+                    <div class="ui-label">Primary Button</div>
+                    <button class="btn-primary">Add Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

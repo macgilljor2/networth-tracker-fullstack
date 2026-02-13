@@ -1,0 +1,19 @@
+Email: testuser@networthtracker.com
+Password: TestPassword123!
+User ID: b49a9b6b-4eb9-4f84-be39-1d71d9f66918
+
+Access Token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNDlhOWI2Yi00ZWI5LTRmODQtYmUzOS0xZDcxZDlmNjY5MTgiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZXhwIjoxNzcwMDQ5NjE0fQ.LUYH2MRQMZzkFJxYjnPFTlloCSpdwkwsJ3jYLAvrbwA
+
+Refresh Token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNDlhOWI2Yi00ZWI5LTRmODQtYmUzOS0xZDcxZDlmNjY5MTgiLCJ0eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3MDY1MzUxNH0.X1J2mrTwX8zHSYiz_IL5FjgyCLaMWpc_X_1aBkl55CA
+
+Account IDs:
+Main Savings: ee042503-367f-4d4d-8899-dacc6b8d301f
+Current Account: 52c09570-be3b-431a-a44d-d200bb1cd457
+Investment Portfolio: 01237cd5-678d-425b-bc0d-1a7301184d61
+Emergency Fund: 1b773ae5-7905-44c0-bcd3-3150ffa4d192
+
+Group IDs:
+Banking: 84e5975e-7238-4b7f-bdc1-025f4cc68f3c
+Investments: d0d47bc5-51d6-42c4-a3ea-f8646e937e3f

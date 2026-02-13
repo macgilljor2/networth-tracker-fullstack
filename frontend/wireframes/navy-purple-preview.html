@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RBS-Inspired Theme Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #0c4a6e;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #0369a1;
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 16px;
+        }
+
+        .theme-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(12, 74, 110, 0.1);
+            border: 1px solid #bae6fd;
+        }
+
+        .ui-element {
+            margin-bottom: 30px;
+        }
+
+        .ui-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+            font-weight: 600;
+            color: #0369a1;
+        }
+
+        .accent-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #0c4a6e 0%, #0369a1 40%, #06b6d4 70%, #67e8f9 100%);
+            margin-bottom: 12px;
+        }
+
+        .palette {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 80px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid rgba(186, 230, 253, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+            gap: 4px;
+        }
+
+        .color-swatch.light {
+            color: #0c4a6e;
+        }
+
+        .color-swatch.dark {
+            color: white;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #bae6fd;
+            box-shadow: 0 4px 12px rgba(12, 74, 110, 0.08);
+        }
+
+        .btn-primary {
+            padding: 14px 28px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+            color: white;
+            margin-right: 12px;
+        }
+
+        .btn-secondary {
+            padding: 14px 28px;
+            border-radius: 10px;
+            border: 2px solid #06b6d4;
+            font-weight: 600;
+            font-size: 14px;
+            background: #ecfeff;
+            color: #0369a1;
+        }
+
+        .balance {
+            font-family: 'Courier New', monospace;
+            font-size: 42px;
+            font-weight: 700;
+            color: #0c4a6e;
+        }
+
+        .balance-label {
+            font-size: 13px;
+            color: #0369a1;
+            margin-bottom: 8px;
+        }
+
+        .nav-preview {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .nav-item {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #0369a1;
+            background: #f0f9ff;
+        }
+
+        .nav-item.active {
+            background: #0369a1;
+            color: white;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0c4a6e;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #0369a1;
+            margin-top: 4px;
+        }
+
+        .approval {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border-radius: 12px;
+            border: 1px solid #7dd3fc;
+        }
+
+        .approval h3 {
+            color: #0c4a6e;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .approval p {
+            color: #0369a1;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💙 Royal Blue</h1>
+        <p class="subtitle">RBS-inspired - Deep navy blues with bright cyan accents</p>
+
+        <div class="theme-card">
+            <!-- Color Palette -->
+            <div class="ui-element">
+                <div class="ui-label">Color Palette</div>
+                <div class="accent-bar"></div>
+                <div class="palette">
+                    <div class="color-swatch dark" style="background: #0c4a6e;">Deep Navy</div>
+                    <div class="color-swatch dark" style="background: #0369a1;">Racing Blue</div>
+                    <div class="color-swatch light" style="background: #06b6d4; color: #0c4a6e;">Bright Cyan</div>
+                    <div class="color-swatch light" style="background: #67e8f9; color: #0c4a6e;">Sky Blue</div>
+                    <div class="color-swatch light" style="background: #bae6fd; color: #0c4a6e;">Ice Blue</div>
+                </div>
+            </div>
+
+            <!-- Balance Display -->
+            <div class="ui-element">
+                <div class="ui-label">Balance Display</div>
+                <div class="balance">£124,592.66</div>
+            </div>
+
+            <!-- Card Component -->
+            <div class="ui-element">
+                <div class="ui-label">Card Component</div>
+                <div class="card">
+                    <div class="balance-label">Total Balance</div>
+                    <div style="font-size: 28px; font-weight: 600; color: #0c4a6e; font-family: 'Courier New', monospace;">£45,230.00</div>
+                    <div class="stat-grid">
+                        <div>
+                            <div class="stat-value">+12%</div>
+                            <div class="stat-label">This Month</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Accounts</div>
+                        </div>
+                        <div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Groups</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="ui-element">
+                <div class="ui-label">Navigation Bar</div>
+                <div class="nav-preview">
+                    <div class="nav-item active">Dashboard</div>
+                    <div class="nav-item">Accounts</div>
+                    <div class="nav-item">Settings</div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="ui-element">
+                <div class="ui-label">Buttons</div>
+                <button class="btn-primary">Primary Action</button>
+                <button class="btn-secondary">Secondary</button>
+            </div>
+        </div>
+
+        <div class="approval">
+            <h3>Ready to implement?</h3>
+            <p>RBS-inspired royal blue theme - Will be your third theme alongside Beige & Earth and Scandinavian Night</p>
+        </div>
+    </div>
+</body>
+</html>

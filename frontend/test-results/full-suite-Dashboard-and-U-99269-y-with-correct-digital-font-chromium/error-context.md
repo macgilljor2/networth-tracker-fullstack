@@ -1,0 +1,116 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - alert [ref=e2]
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - link "Net Worth Tracker" [ref=e7] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e9]
+          - generic [ref=e11]: Net Worth Tracker
+        - generic [ref=e12]:
+          - link "Dashboard" [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - text: Dashboard
+          - link "Accounts" [ref=e15] [cursor=pointer]:
+            - /url: /accounts
+          - link "Groups" [ref=e16] [cursor=pointer]:
+            - /url: /groups
+          - link "Settings" [ref=e17] [cursor=pointer]:
+            - /url: /settings
+        - generic [ref=e18]:
+          - button "Logout" [ref=e19] [cursor=pointer]
+          - generic [ref=e20] [cursor=pointer]: T
+    - main [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e24]:
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: Total Net Worth
+            - generic [ref=e27]:
+              - generic [ref=e28]: £
+              - generic [ref=e29]: "0"
+          - generic [ref=e30]:
+            - img [ref=e31]
+            - generic [ref=e33]: +0.0%
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - heading "Show on Chart" [level=3] [ref=e36]
+            - paragraph [ref=e37]: Toggle series to display
+            - generic [ref=e39]:
+              - checkbox "Total Net Worth" [checked] [disabled] [ref=e40]
+              - generic [ref=e43]: Total Net Worth
+            - generic [ref=e44]:
+              - button "Toggle All" [ref=e45] [cursor=pointer]
+              - button "Clear All" [ref=e46] [cursor=pointer]
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - generic [ref=e49]:
+                - heading "Net Worth History" [level=2] [ref=e50]
+                - paragraph [ref=e51]: Track your growth over time
+              - generic [ref=e52]:
+                - button "1M" [ref=e53] [cursor=pointer]
+                - button "3M" [ref=e54] [cursor=pointer]
+                - button "1Y" [ref=e55] [cursor=pointer]
+                - button "ALL" [ref=e56] [cursor=pointer]
+            - img [ref=e60]
+          - generic [ref=e61]:
+            - heading "By Account Type" [level=2] [ref=e62]
+            - paragraph [ref=e63]: Distribution breakdown
+            - img [ref=e67]
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - generic [ref=e72]: savings
+                - generic [ref=e73]: £0
+              - generic [ref=e74]:
+                - generic [ref=e77]: current
+                - generic [ref=e78]: £0
+              - generic [ref=e79]:
+                - generic [ref=e82]: loan
+                - generic [ref=e83]: £0
+              - generic [ref=e84]:
+                - generic [ref=e87]: credit
+                - generic [ref=e88]: £0
+              - generic [ref=e89]:
+                - generic [ref=e92]: investment
+                - generic [ref=e93]: £0
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - generic [ref=e96]:
+              - heading "Account Groups" [level=2] [ref=e97]
+              - paragraph [ref=e98]: Your organized portfolios
+            - button "+ New Group" [ref=e99] [cursor=pointer]
+          - generic [ref=e100]:
+            - generic [ref=e101] [cursor=pointer]:
+              - generic [ref=e103]:
+                - img [ref=e105]
+                - generic [ref=e107]:
+                  - heading "Test" [level=3] [ref=e108]
+                  - paragraph [ref=e109]: 0 accounts
+              - paragraph [ref=e110]: £0.00
+            - generic [ref=e111] [cursor=pointer]:
+              - generic [ref=e113]:
+                - img [ref=e115]
+                - generic [ref=e117]:
+                  - heading "Test with accounts" [level=3] [ref=e118]
+                  - paragraph [ref=e119]: 1 accounts
+              - paragraph [ref=e120]: £0.00
+            - generic [ref=e121] [cursor=pointer]:
+              - generic [ref=e123]:
+                - img [ref=e125]
+                - generic [ref=e127]:
+                  - heading "Test Group 1770575827506" [level=3] [ref=e128]
+                  - paragraph [ref=e129]: 0 accounts
+              - paragraph [ref=e130]: £0.00
+            - generic [ref=e131] [cursor=pointer]:
+              - generic [ref=e133]:
+                - img [ref=e135]
+                - generic [ref=e137]:
+                  - heading "Test Group 1770576160637" [level=3] [ref=e138]
+                  - paragraph [ref=e139]: 0 accounts
+              - paragraph [ref=e140]: £0.00
+            - generic [ref=e142] [cursor=pointer]:
+              - img [ref=e144]
+              - paragraph [ref=e146]: Create New Group
+```

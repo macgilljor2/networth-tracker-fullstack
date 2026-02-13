@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Groups - Net Worth Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --emerald: #10b981;
+            --emerald-light: #34d399;
+            --gold: #f59e0b;
+            --gold-light: #fbbf24;
+            --blue: #3b82f6;
+        }
+
+        * {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+
+        .gradient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .gradient-mesh::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .glass-card {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .group-card {
+            background: linear-gradient(135deg, rgba(17, 24, 39, 0.9) 0%, rgba(10, 14, 26, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--emerald) 0%, #059669 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        .mini-chart {
+            height: 60px;
+        }
+
+        .account-tag {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="text-gray-100">
+    <div class="gradient-mesh"></div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 glass-card border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-white">Net Worth Tracker</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="w-dashboard-emerald.html" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
+                    <a href="w-accounts-listing.html" class="text-gray-400 hover:text-white transition-colors">Accounts</a>
+                    <a href="w-groups.html" class="text-emerald-400 font-medium">Groups</a>
+                    <a href="settings.html" class="text-gray-400 hover:text-white transition-colors">Settings</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">Logout</button>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-500 flex items-center justify-center text-sm font-bold text-gray-900">JD</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-4xl font-bold text-white mb-2">Account Groups</h1>
+                <p class="text-gray-400">Organize your accounts into portfolios</p>
+            </div>
+            <button class="btn-primary px-6 py-3 rounded-xl text-white font-semibold flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Create Group</span>
+            </button>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="glass-card rounded-xl p-5">
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Total Groups</p>
+                <p class="text-3xl font-bold text-white">3</p>
+            </div>
+            <div class="glass-card rounded-xl p-5">
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Combined Balance</p>
+                <p class="text-3xl font-bold text-emerald-400 font-mono">£90,453</p>
+            </div>
+            <div class="glass-card rounded-xl p-5">
+                <p class="text-sm font-medium text-gray-400 uppercase tracking-wider mb-1">Accounts Linked</p>
+                <p class="text-3xl font-bold text-white">7</p>
+            </div>
+        </div>
+
+        <!-- Groups Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Group 1: Emergency Fund -->
+            <div class="group-card rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 flex items-center justify-center">
+                            <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H9m15 0h3m-3 0h-6m-6 0H6m3 0v3m0 0v6m0-6h6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white text-xl">Emergency Fund</h3>
+                            <p class="text-sm text-gray-400">Rainy day savings</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 rounded-lg hover:bg-gray-700/50 transition-colors" title="Edit">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-gray-700/50 transition-colors" title="View Details">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-baseline space-x-2 mb-2">
+                        <span class="text-3xl font-bold text-white font-mono">£25,430.00</span>
+                        <span class="text-sm font-medium text-emerald-400">+2.4%</span>
+                    </div>
+                    <p class="text-xs text-gray-500">3 accounts</p>
+                </div>
+
+                <!-- Mini Chart -->
+                <div class="mini-chart mb-4">
+                    <canvas id="group1Chart"></canvas>
+                </div>
+
+                <!-- Linked Accounts -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="account-tag text-gray-300">Main Savings</span>
+                    <span class="account-tag text-gray-300">Emergency Fund</span>
+                    <span class="account-tag text-gray-300">Cash Reserve</span>
+                </div>
+            </div>
+
+            <!-- Group 2: Investments -->
+            <div class="group-card rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center">
+                            <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white text-xl">Investments</h3>
+                            <p class="text-sm text-gray-400">Long-term growth portfolio</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 rounded-lg hover:bg-gray-700/50 transition-colors" title="Edit">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-gray-700/50 transition-colors" title="View Details">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-baseline space-x-2 mb-2">
+                        <span class="text-3xl font-bold text-white font-mono">£52,100.50</span>
+                        <span class="text-sm font-medium text-emerald-400">+8.1%</span>
+                    </div>
+                    <p class="text-xs text-gray-500">2 accounts</p>
+                </div>
+
+                <!-- Mini Chart -->
+                <div class="mini-chart mb-4">
+                    <canvas id="group2Chart"></canvas>
+                </div>
+
+                <!-- Linked Accounts -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="account-tag text-gray-300">Stock Portfolio</span>
+                    <span class="account-tag text-gray-300">Stocks & Shares ISA</span>
+                </div>
+            </div>
+
+            <!-- Group 3: Everyday Banking -->
+            <div class="group-card rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-gold-400/20 to-gold-500/20 flex items-center justify-center">
+                            <svg class="w-7 h-7 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white text-xl">Everyday Banking</h3>
+                            <p class="text-sm text-gray-400">Daily expenses and transactions</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="p-2 rounded-lg hover:bg-gray-700/50 transition-colors" title="Edit">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button class="p-2 rounded-lg hover:bg-gray-700/50 transition-colors" title="View Details">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex items-baseline space-x-2 mb-2">
+                        <span class="text-3xl font-bold text-white font-mono">£12,923.32</span>
+                        <span class="text-sm font-medium text-red-400">-0.8%</span>
+                    </div>
+                    <p class="text-xs text-gray-500">2 accounts</p>
+                </div>
+
+                <!-- Mini Chart -->
+                <div class="mini-chart mb-4">
+                    <canvas id="group3Chart"></canvas>
+                </div>
+
+                <!-- Linked Accounts -->
+                <div class="flex flex-wrap gap-2">
+                    <span class="account-tag text-gray-300">US Checking</span>
+                    <span class="account-tag text-blue-300">Current Account</span>
+                </div>
+            </div>
+
+            <!-- Create New Group Card -->
+            <div class="group-card rounded-2xl p-6 border-2 border-dashed border-gray-700 hover:border-emerald-500/50 transition-all cursor-pointer flex flex-col items-center justify-center min-h-[300px]">
+                <div class="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                </div>
+                <p class="text-lg font-medium text-gray-400 mb-2">Create New Group</p>
+                <p class="text-sm text-gray-500 text-center">Organize your accounts<br/>into custom portfolios</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Mini chart for Group 1 - Emergency Fund
+        const ctx1 = document.getElementById('group1Chart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    data: [15000, 16000, 17000, 18000, 20000, 21000],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+
+        // Mini chart for Group 2 - Investments
+        const ctx2 = document.getElementById('group2Chart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    data: [45000, 48000, 50000, 55000, 52000, 56000],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+
+        // Mini chart for Group 3 - Everyday Banking
+        const ctx3 = document.getElementById('group3Chart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    data: [25000, 28000, 31000, 32000, 30000, 33000],
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

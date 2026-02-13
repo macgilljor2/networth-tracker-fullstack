@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Details - Net Worth Tracker (Beige)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #f5f0e8;
+            --bg-secondary: #faf8f5;
+            --green-accent: #5a8f5a;
+            --green-dark: #3d6b3d;
+            --sage: #7d8471;
+            --terracotta: #c17f59;
+            --text-primary: #3d3428;
+            --text-secondary: #6d5c4a;
+            --border: #e5ddd3;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+
+        .gradient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .gradient-mesh::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(90, 143, 90, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(193, 127, 89, 0.08) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .glass-card {
+            background: rgba(250, 248, 245, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(61, 52, 40, 0.06);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .data-table th {
+            background: rgba(168, 152, 128, 0.1);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(90, 143, 90, 0.05);
+        }
+
+        .data-table tr.selected td {
+            background: rgba(90, 143, 90, 0.12);
+        }
+
+        .checkbox-cell {
+            width: 40px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--green-accent) 0%, var(--green-dark) 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -5px rgba(90, 143, 90, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(168, 152, 128, 0.1);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 152, 128, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(61, 52, 40, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 90%;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .font-display {
+            font-family: 'Playfair Display', serif;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+    <div class="gradient-mesh"></div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 glass-card border-b border-[#e5ddd3]">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <a href="w-accounts-listing-beige.html" class="flex items-center space-x-2">
+                        <svg class="w-6 h-6 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        <span class="text-lg font-bold text-[#3d3428]">Accounts</span>
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 text-sm font-medium text-[#a89880] hover:text-[#3d3428] transition-colors">Logout</button>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#c17f59] to-[#a86545] flex items-center justify-center text-sm font-bold text-white">JD</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        <!-- Back Navigation -->
+        <div class="mb-6">
+            <a href="w-accounts-listing-beige.html" class="inline-flex items-center text-sm text-[#a89880] hover:text-[#5a8f5a] transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Back to Accounts
+            </a>
+        </div>
+
+        <!-- Account Header -->
+        <div class="glass-card rounded-2xl p-8 mb-8">
+            <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-[#5a8f5a]/10 to-[#3d6b3d]/10 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-[#5a8f5a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-display font-bold text-[#3d3428] mb-1">Main Savings Account</h1>
+                        <p class="text-[#6d5c4a]">HSBC • <span class="text-[#5a8f5a]">Savings</span> • GBP</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-sm text-[#a89880]">Current Balance</p>
+                    <p class="text-3xl font-display font-bold text-[#5a8f5a] font-mono">£25,430.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Balance History Chart -->
+        <div class="glass-card rounded-2xl p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-lg font-semibold text-[#3d3428]">Balance History</h2>
+                    <p class="text-sm text-[#6d5c4a]">Track your balance over time</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#5a8f5a]/10 text-[#5a8f5a] border border-[#5a8f5a]/30 hover:bg-[#5a8f5a]/20 transition-colors">
+                        3M
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        6M
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        1Y
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        All
+                    </button>
+                </div>
+            </div>
+            <div class="h-80">
+                <canvas id="balanceHistoryChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Balance Entries Section -->
+        <div class="glass-card rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-[#3d3428]">Balance Entries</h2>
+                    <p class="text-sm text-[#6d5c4a]">Manage and edit your balance submissions</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div id="bulk-actions" class="hidden items-center space-x-2">
+                        <span class="text-sm text-[#6d5c4a]" id="selected-count">0 selected</span>
+                        <button onclick="openBulkEditModal()" class="btn-secondary px-4 py-2 rounded-lg text-sm font-medium text-[#3d3428]">
+                            Bulk Edit
+                        </button>
+                        <button onclick="deleteSelected()" class="px-4 py-2 rounded-lg text-sm font-medium text-red-600 bg-red-50 border border-red-200 hover:bg-red-100">
+                            Delete
+                        </button>
+                    </div>
+                    <button onclick="openAddBalanceModal()" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium text-white flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Add Balance
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="flex-1">
+                    <input type="text" placeholder="Search by notes..." class="w-full px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] placeholder-[#a89880] focus:border-[#5a8f5a] focus:outline-none">
+                </div>
+                <select class="px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] focus:border-[#5a8f5a] focus:outline-none">
+                    <option value="30">Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                    <option value="365">Last year</option>
+                    <option value="all">All time</option>
+                </select>
+                <select class="px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] focus:border-[#5a8f5a] focus:outline-none">
+                    <option value="newest">Newest first</option>
+                    <option value="oldest">Oldest first</option>
+                    <option value="highest">Highest balance</option>
+                    <option value="lowest">Lowest balance</option>
+                </select>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-cell">
+                                <input type="checkbox" id="selectAll" onchange="toggleAllRows(this)" class="w-4 h-4 rounded border-[#d5ccc0] bg-[#e8ddd0] text-[#5a8f5a]">
+                            </th>
+                            <th>Submission Date</th>
+                            <th>Balance</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="balance-table">
+                        <tr data-id="1">
+                            <td class="checkbox-cell">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 rounded border-[#d5ccc0] bg-[#e8ddd0] text-[#5a8f5a]">
+                            </td>
+                            <td class="text-[#3d3428] font-mono">2025-02-05</td>
+                            <td class="text-[#3d3428] font-mono font-semibold text-[#5a8f5a]">£25,430.00</td>
+                            <td class="text-[#6d5c4a]">Latest balance update</td>
+                            <td>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editBalance(1)" class="p-1.5 rounded hover:bg-[#d5ccc0] transition-colors" title="Edit">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <button onclick="deleteBalance(1)" class="p-1.5 rounded hover:bg-red-100 transition-colors" title="Delete">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 014 0 0 0 0v6a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h2a2 2 0 012 2v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="2" class="selected">
+                            <td class="checkbox-cell">
+                                <input type="checkbox" checked class="row-checkbox w-4 h-4 rounded border-[#d5ccc0] bg-[#e8ddd0] text-[#5a8f5a]">
+                            </td>
+                            <td class="text-[#3d3428] font-mono">2025-01-15</td>
+                            <td class="text-[#3d3428] font-mono font-semibold text-[#5a8f5a]">£25,000.00</td>
+                            <td class="text-[#6d5c4a]">Monthly check</td>
+                            <td>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editBalance(2)" class="p-1.5 rounded hover:bg-[#d5ccc0] transition-colors" title="Edit">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <button onclick="deleteBalance(2)" class="p-1.5 rounded hover:bg-red-100 transition-colors" title="Delete">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 014 0 0 0 0v6a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h2a2 2 0 012 2v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="3">
+                            <td class="checkbox-cell">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 rounded border-[#d5ccc0] bg-[#e8ddd0] text-[#5a8f5a]">
+                            </td>
+                            <td class="text-[#3d3428] font-mono">2024-12-01</td>
+                            <td class="text-[#3d3428] font-mono font-semibold text-[#5a8f5a]">£24,650.00</td>
+                            <td class="text-[#6d5c4a]">End of month balance</td>
+                            <td>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editBalance(3)" class="p-1.5 rounded hover:bg-[#d5ccc0] transition-colors" title="Edit">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <button onclick="deleteBalance(3)" class="p-1.5 rounded hover:bg-red-100 transition-colors" title="Delete">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 014 0 0 0 0v6a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h2a2 2 0 012 2v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-id="4">
+                            <td class="checkbox-cell">
+                                <input type="checkbox" class="row-checkbox w-4 h-4 rounded border-[#d5ccc0] bg-[#e8ddd0] text-[#5a8f5a]">
+                            </td>
+                            <td class="text-[#3d3428] font-mono">2024-11-15</td>
+                            <td class="text-[#3d3428] font-mono font-semibold text-[#5a8f5a]">£24,200.00</td>
+                            <td class="text-[#6d5c4a]">Initial deposit</td>
+                            <td>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editBalance(4)" class="p-1.5 rounded hover:bg-[#d5ccc0] transition-colors" title="Edit">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <button onclick="deleteBalance(4)" class="p-1.5 rounded hover:bg-red-100 transition-colors" title="Delete">
+                                        <svg class="w-4 h-4 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 2H3a2 2 0 01-2-2V6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 014 0 0 0 0v6a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h2a2 2 0 012 2v2z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-between mt-4">
+                <p class="text-sm text-[#a89880]">Showing 1-4 of 12 entries</p>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        Previous
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#5a8f5a]/10 text-[#5a8f5a] border border-[#5a8f5a]/30 hover:bg-[#5a8f5a]/20 transition-colors">
+                        1
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        2
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        3
+                    </button>
+                    <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#e8ddd0] text-[#6d5c4a] hover:bg-[#d5ccc0] transition-colors">
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bulk Edit Modal -->
+    <div id="bulkEditModal" class="modal">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-display font-semibold text-[#3d3428]">Bulk Edit</h3>
+                <button onclick="closeBulkEditModal()" class="text-[#a89880] hover:text-[#3d3428] transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="text-sm text-[#6d5c4a] mb-6">Edit <span id="bulk-edit-count" class="text-[#5a8f5a] font-semibold">1</span> selected balance entry</p>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#3d3428] mb-2">New Balance Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#a89880]">£</span>
+                        <input type="number" id="bulk-amount" step="0.01" placeholder="0.00" class="w-full pl-7 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] placeholder-[#a89880] focus:border-[#5a8f5a] focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#3d3428] mb-2">New Submission Date</label>
+                    <input type="date" id="bulk-date" class="w-full px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] focus:border-[#5a8f5a] focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#3d3428] mb-2">Update Notes</label>
+                    <input type="text" id="bulk-notes" placeholder="Enter notes (leave blank to keep existing)" class="w-full px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] placeholder-[#a89880] focus:border-[#5a8f5a] focus:outline-none">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end space-x-3 mt-6">
+                <button onclick="closeBulkEditModal()" class="px-4 py-2 rounded-lg text-sm font-medium text-[#a89880] hover:text-[#3d3428] transition-colors">
+                    Cancel
+                </button>
+                <button onclick="saveBulkEdit()" class="btn-primary px-6 py-2 rounded-lg text-sm font-semibold text-white">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Balance Modal -->
+    <div id="addBalanceModal" class="modal">
+        <div class="modal-content">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-display font-semibold text-[#3d3428]">Add Balance Entry</h3>
+                <button onclick="closeAddBalanceModal()" class="text-[#a89880] hover:text-[#3d3428] transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form onsubmit="addBalance(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#3d3428] mb-2">Balance Amount *</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[#a89880]">£</span>
+                        <input type="number" id="new-amount" step="0.01" required placeholder="0.00" class="w-full pl-7 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] placeholder-[#a89880] focus:border-[#5a8f5a] focus:outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#3d3428] mb-2">Submission Date *</label>
+                    <input type="date" id="new-date" required class="w-full px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] focus:border-[#5a8f5a] focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-[#3d3428] mb-2">Notes</label>
+                    <textarea id="new-notes" rows="3" placeholder="Add any notes about this balance entry..." class="w-full px-4 py-2 rounded-lg bg-[#faf8f5] border border-[#e5ddd3] text-[#3d3428] placeholder-[#a89880] focus:border-[#5a8f5a] focus:outline-none resize-none"></textarea>
+                </div>
+                <div class="flex items-center justify-end space-x-3 mt-6">
+                    <button type="button" onclick="closeAddBalanceModal()" class="px-4 py-2 rounded-lg text-sm font-medium text-[#a89880] hover:text-[#3d3428] transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary px-6 py-2 rounded-lg text-sm font-semibold text-white">
+                        Add Balance
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Balance History Chart
+        const ctx = document.getElementById('balanceHistoryChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Nov 15', 'Dec 01', 'Dec 15', 'Jan 01', 'Jan 15', 'Feb 05'],
+                    datasets: [{
+                        label: 'Balance',
+                        data: [24200, 24650, 24800, 25000, 25200, 25430],
+                        borderColor: '#5a8f5a',
+                        backgroundColor: 'rgba(90, 143, 90, 0.15)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#5a8f5a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(250, 248, 245, 0.95)',
+                            titleColor: '#3d3428',
+                            bodyColor: '#3d3428',
+                            borderColor: 'rgba(90, 143, 90, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Balance: £' + context.parsed.y.toLocaleString();
+                                },
+                                title: function(context) {
+                                    return 'Date: ' + context[0].label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(109, 92, 74, 0.08)', drawBorder: false },
+                            ticks: { color: '#6d5c4a', font: { family: 'Inter' } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(109, 92, 74, 0.08)', drawBorder: false },
+                            ticks: {
+                                color: '#6d5c4a',
+                                font: { family: 'JetBrains Mono' },
+                                callback: (value) => '£' + value.toLocaleString()
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Checkbox functionality
+        const selectAllCheckbox = document.getElementById('selectAll');
+        const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+        const bulkActions = document.getElementById('bulk-actions');
+        const selectedCount = document.getElementById('selected-count');
+
+        function updateBulkActions() {
+            const selected = document.querySelectorAll('.row-checkbox:checked');
+            const count = selected.length;
+
+            if (count > 0) {
+                bulkActions.classList.remove('hidden');
+                bulkActions.classList.add('flex');
+                selectedCount.textContent = count;
+            } else {
+                bulkActions.classList.add('hidden');
+                bulkActions.classList.remove('flex');
+            }
+
+            document.querySelectorAll('.row-checkbox').forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                if (checkbox.checked) {
+                    row.classList.add('selected');
+                } else {
+                    row.classList.remove('selected');
+                }
+            });
+        }
+
+        rowCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateBulkActions);
+        });
+
+        function toggleAllRows(source) {
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.checked = source.checked;
+                const row = checkbox.closest('tr');
+                if (checkbox.checked) {
+                    row.classList.add('selected');
+                } else {
+                    row.classList.remove('selected');
+                }
+            });
+            updateBulkActions();
+        }
+
+        function editBalance(id) {
+            alert('Edit balance entry ' + id + ' - Opens edit modal with current values pre-filled');
+        }
+
+        function deleteBalance(id) {
+            if (confirm('Are you sure you want to delete this balance entry?')) {
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                if (row) {
+                    row.remove();
+                    updateBulkActions();
+                }
+            }
+        }
+
+        function openBulkEditModal() {
+            const count = document.querySelectorAll('.row-checkbox:checked').length;
+            document.getElementById('bulk-edit-count').textContent = count;
+            document.getElementById('bulkEditModal').classList.add('active');
+        }
+
+        function closeBulkEditModal() {
+            document.getElementById('bulkEditModal').classList.remove('active');
+        }
+
+        function openAddBalanceModal() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('new-date').value = today;
+            document.getElementById('addBalanceModal').classList.add('active');
+        }
+
+        function closeAddBalanceModal() {
+            document.getElementById('addBalanceModal').classList.remove('active');
+        }
+
+        function saveBulkEdit() {
+            const count = document.querySelectorAll('.row-checkbox:checked').length;
+            alert('Bulk edit saved for ' + count + ' balance entries');
+            closeBulkEditModal();
+        }
+
+        function addBalance(event) {
+            event.preventDefault();
+            const amount = document.getElementById('new-amount').value;
+            const date = document.getElementById('new-date').value;
+            const notes = document.getElementById('new-notes').value;
+            alert('Balance added: £' + amount + ' on ' + date + (notes ? ' - ' + notes : ''));
+            closeAddBalanceModal();
+        }
+    </script>
+</body>
+</html>

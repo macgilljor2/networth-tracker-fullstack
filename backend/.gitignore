@@ -1,0 +1,33 @@
+.venv
+app/db.json
+.pyc
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Alembic
+# Keep versions/ but ignore if needed
+
+# Test coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Test artifacts
+test_db.sqlite
+*.db

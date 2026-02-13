@@ -1,0 +1,44 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img [ref=e8]
+        - generic [ref=e10]: Net Worth Tracker
+      - generic [ref=e11]:
+        - link "Login" [ref=e12] [cursor=pointer]:
+          - /url: /login
+        - link "Register" [ref=e13] [cursor=pointer]:
+          - /url: /register
+  - generic [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Email Address
+          - textbox "Email Address" [ref=e22]:
+            - /placeholder: you@example.com
+        - generic [ref=e23]:
+          - generic [ref=e24]: Password
+          - textbox "Password" [ref=e26]:
+            - /placeholder: ••••••••
+        - generic [ref=e27]:
+          - generic [ref=e28] [cursor=pointer]:
+            - checkbox "Remember me" [ref=e29]
+            - generic [ref=e30]: Remember me
+          - link "Forgot password?" [ref=e31] [cursor=pointer]:
+            - /url: /forgot-password
+        - button "Sign In" [ref=e32] [cursor=pointer]
+      - generic [ref=e37]: or continue with
+      - generic [ref=e38]:
+        - button [ref=e39] [cursor=pointer]:
+          - img [ref=e40]
+        - button [ref=e45] [cursor=pointer]:
+          - img [ref=e46]
+      - paragraph [ref=e48]:
+        - text: Don't have an account?
+        - link "Create one now" [ref=e49] [cursor=pointer]:
+          - /url: /register
+    - paragraph [ref=e50]: © 2025 Net Worth Tracker. All rights reserved.
+```

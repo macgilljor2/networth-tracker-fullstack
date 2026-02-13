@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Worth Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.8);
+            --emerald: #10b981;
+            --emerald-light: #34d399;
+            --gold: #f59e0b;
+            --gold-light: #fbbf24;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+        }
+
+        * {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+
+        /* Animated gradient mesh background */
+        .gradient-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .gradient-mesh::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Glassmorphism cards */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Number counter animation */
+        .counter {
+            display: inline-block;
+            animation: countUp 0.6s ease-out;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staggered fade in for cards */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .fade-in:nth-child(1) { animation-delay: 0.1s; }
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.3s; }
+        .fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Glow effect on hover */
+        .glow-hover:hover {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--emerald);
+            border-radius: 4px;
+        }
+
+        /* Chart canvas styling */
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="text-gray-100">
+    <!-- Gradient Mesh Background -->
+    <div class="gradient-mesh"></div>
+
+    <!-- Navigation -->
+    <nav class="relative z-10 glass-card border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-white">Net Worth Tracker</span>
+                </div>
+
+                <!-- Nav Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="dashboard.html" class="text-emerald-400 font-medium">Dashboard</a>
+                    <a href="accounts.html" class="text-gray-400 hover:text-white transition-colors">Accounts</a>
+                    <a href="groups.html" class="text-gray-400 hover:text-white transition-colors">Groups</a>
+                    <a href="settings.html" class="text-gray-400 hover:text-white transition-colors">Settings</a>
+                </div>
+
+                <!-- User Menu -->
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                        Logout
+                    </button>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gold-400 to-gold-500 flex items-center justify-center text-sm font-bold text-gray-900">
+                        JD
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-white mb-2">Dashboard</h1>
+            <p class="text-gray-400">Your financial overview at a glance</p>
+        </div>
+
+        <!-- Total Net Worth Card -->
+        <div class="glass-card rounded-2xl p-8 mb-8 fade-in glow-hover transition-all duration-300">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <p class="text-sm font-medium text-gray-400 uppercase tracking-wider">Total Net Worth</p>
+                    <div class="flex items-baseline space-x-2 mt-1">
+                        <span class="text-5xl font-bold text-white counter">£</span>
+                        <span class="text-5xl font-bold text-emerald-400 counter">127,453.82</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    <span class="text-sm font-medium text-emerald-400">+12.4%</span>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 font-mono">Last updated: Just now · Live rates</p>
+        </div>
+
+        <!-- Two Column Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
+            <!-- Series Toggle Checklist -->
+            <div class="glass-card rounded-2xl p-6 fade-in">
+                <h3 class="text-lg font-semibold text-white mb-4">Show on Chart</h3>
+                <p class="text-sm text-gray-400 mb-4">Toggle series to display</p>
+
+                <div class="space-y-3" id="series-toggles">
+                    <!-- Total Net Worth (always on) -->
+                    <label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer">
+                        <input type="checkbox" checked disabled class="w-4 h-4 rounded border-gray-600 bg-gray-700 text-emerald-500">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                            <span class="text-sm font-medium text-white">Total Net Worth</span>
+                        </div>
+                    </label>
+
+                    <!-- Emergency Fund -->
+                    <label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer transition-colors">
+                        <input type="checkbox" checked data-series="emergency" class="series-toggle w-4 h-4 rounded border-gray-600 bg-gray-700 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-gray-900">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                            <span class="text-sm text-gray-300">Emergency Fund</span>
+                        </div>
+                    </label>
+
+                    <!-- Investments -->
+                    <label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer transition-colors">
+                        <input type="checkbox" checked data-series="investments" class="series-toggle w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-gray-900">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                            <span class="text-sm text-gray-300">Investments</span>
+                        </div>
+                    </label>
+
+                    <!-- Everyday Banking -->
+                    <label class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 cursor-pointer transition-colors">
+                        <input type="checkbox" data-series="banking" class="series-toggle w-4 h-4 rounded border-gray-600 bg-gray-700 text-gold-500 focus:ring-gold-500 focus:ring-offset-gray-900">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-gold-400"></div>
+                            <span class="text-sm text-gray-300">Everyday Banking</span>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-700">
+                    <button id="toggle-all" class="w-full py-2 px-3 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-colors mb-2">
+                        Toggle All
+                    </button>
+                    <button id="clear-all" class="w-full py-2 px-3 text-xs font-medium rounded-lg bg-gray-700/50 text-gray-300 hover:bg-gray-700 transition-colors">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Balance History Chart -->
+            <div class="lg:col-span-3 glass-card rounded-2xl p-6 fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-lg font-semibold text-white">Net Worth History</h2>
+                        <p class="text-sm text-gray-400">Track your growth over time</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-colors">
+                            1M
+                        </button>
+                        <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition-colors">
+                            3M
+                        </button>
+                        <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition-colors">
+                            1Y
+                        </button>
+                        <button class="px-3 py-1.5 text-xs font-medium rounded-lg bg-gray-700/30 text-gray-400 hover:bg-gray-700/50 transition-colors">
+                            All
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="balanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Account Type Distribution -->
+            <div class="glass-card rounded-2xl p-6 fade-in">
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold text-white">By Account Type</h2>
+                    <p class="text-sm text-gray-400">Distribution breakdown</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="mt-6 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                            <span class="text-sm text-gray-300">Savings</span>
+                        </div>
+                        <span class="text-sm font-mono font-medium text-white">£45,230.00</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                            <span class="text-sm text-gray-300">Investment</span>
+                        </div>
+                        <span class="text-sm font-mono font-medium text-white">£52,100.50</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-gold-400"></div>
+                            <span class="text-sm text-gray-300">Current</span>
+                        </div>
+                        <span class="text-sm font-mono font-medium text-white">£30,123.32</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Groups -->
+        <div class="glass-card rounded-2xl p-6 fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-white">Account Groups</h2>
+                    <p class="text-sm text-gray-400">Your organized portfolios</p>
+                </div>
+                <button class="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white transition-colors">
+                    + New Group
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Group Card 1 -->
+                <div class="group relative p-5 rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:border-emerald-500/50 transition-all duration-300 cursor-pointer">
+                    <div class="absolute top-4 right-4 w-2 h-2 rounded-full bg-emerald-400"></div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">Emergency Fund</h3>
+                            <p class="text-xs text-gray-500">3 accounts</p>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-emerald-400 font-mono">£25,430.00</p>
+                </div>
+
+                <!-- Group Card 2 -->
+                <div class="group relative p-5 rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:border-blue-500/50 transition-all duration-300 cursor-pointer">
+                    <div class="absolute top-4 right-4 w-2 h-2 rounded-full bg-blue-400"></div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">Investments</h3>
+                            <p class="text-xs text-gray-500">2 accounts</p>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-blue-400 font-mono">£52,100.50</p>
+                </div>
+
+                <!-- Group Card 3 -->
+                <div class="group relative p-5 rounded-xl bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:border-gold-400/50 transition-all duration-300 cursor-pointer">
+                    <div class="absolute top-4 right-4 w-2 h-2 rounded-full bg-gold-400"></div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gold-400/20 to-gold-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-white">Everyday Banking</h3>
+                            <p class="text-xs text-gray-500">2 accounts</p>
+                        </div>
+                    </div>
+                    <p class="text-2xl font-bold text-gold-400 font-mono">£12,923.32</p>
+                </div>
+
+                <!-- Add New Group Card -->
+                <div class="group p-5 rounded-xl border-2 border-dashed border-gray-700 hover:border-emerald-500/50 transition-all duration-300 cursor-pointer flex items-center justify-center min-h-[140px]">
+                    <div class="text-center">
+                        <div class="w-12 h-12 rounded-full bg-gray-800 group-hover:bg-emerald-500/10 mx-auto mb-3 flex items-center justify-center transition-colors">
+                            <svg class="w-6 h-6 text-gray-500 group-hover:text-emerald-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-medium text-gray-500 group-hover:text-emerald-400 transition-colors">Create New Group</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Chart data for all series
+        const chartData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [
+                {
+                    label: 'Total Net Worth',
+                    data: [85000, 92000, 98000, 105000, 102000, 110000, 115000, 118000, 122000, 125000, 124000, 127453],
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: '#10b981',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 2,
+                    hidden: false
+                },
+                {
+                    label: 'Emergency Fund',
+                    data: [15000, 16000, 17000, 18000, 20000, 21000, 22000, 23000, 24000, 25000, 24900, 25430],
+                    borderColor: '#10b981',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#10b981',
+                    hidden: false
+                },
+                {
+                    label: 'Investments',
+                    data: [45000, 48000, 50000, 55000, 52000, 56000, 58000, 60000, 62000, 65000, 64000, 52100],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#3b82f6',
+                    hidden: false
+                },
+                {
+                    label: 'Everyday Banking',
+                    data: [25000, 28000, 31000, 32000, 30000, 33000, 35000, 35000, 36000, 35000, 35100, 12923],
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#f59e0b',
+                    hidden: true
+                }
+            ]
+        };
+
+        // Balance History Line Chart
+        const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+        let balanceChart = new Chart(balanceCtx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                        titleColor: '#f9fafb',
+                        bodyColor: '#f9fafb',
+                        borderColor: 'rgba(16, 185, 129, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': £' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#9ca3af',
+                            font: {
+                                family: 'Space Grotesk'
+                            }
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#9ca3af',
+                            font: {
+                                family: 'JetBrains Mono'
+                            },
+                            callback: function(value) {
+                                return '£' + (value / 1000) + 'k';
+                            }
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                }
+            }
+        });
+
+        // Series toggle functionality
+        const seriesToggles = document.querySelectorAll('.series-toggle');
+
+        seriesToggles.forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const series = this.getAttribute('data-series');
+                let datasetIndex;
+
+                if (series === 'emergency') {
+                    datasetIndex = 1;
+                } else if (series === 'investments') {
+                    datasetIndex = 2;
+                } else if (series === 'banking') {
+                    datasetIndex = 3;
+                }
+
+                balanceChart.data.datasets[datasetIndex].hidden = !this.checked;
+                balanceChart.update();
+            });
+        });
+
+        // Toggle All button
+        document.getElementById('toggle-all').addEventListener('click', function() {
+            seriesToggles.forEach(toggle => {
+                toggle.checked = true;
+                toggle.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // Clear All button
+        document.getElementById('clear-all').addEventListener('click', function() {
+            seriesToggles.forEach(toggle => {
+                toggle.checked = false;
+                toggle.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // Account Type Distribution Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Savings', 'Investment', 'Current', 'Credit', 'Loan'],
+                datasets: [{
+                    data: [45230, 52100.50, 30123.32, 0, 0],
+                    backgroundColor: [
+                        '#10b981',
+                        '#3b82f6',
+                        '#f59e0b',
+                        '#ef4444',
+                        '#8b5cf6'
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                        titleColor: '#f9fafb',
+                        bodyColor: '#f9fafb',
+                        borderColor: 'rgba(16, 185, 129, 0.3)',
+                        borderWidth: 1,
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return label + ': £' + value.toLocaleString() + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
