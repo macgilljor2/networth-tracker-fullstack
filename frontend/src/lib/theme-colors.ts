@@ -30,7 +30,7 @@ export function getThemeColor(colorKey: keyof ThemeColors): string {
     btnSecondary: 'var(--color-btn-secondary)',
     btnSecondaryBg: 'var(--color-btn-secondary-bg)',
   }
-  return colorMap[colorKey]
+  return colorMap[colorKey as ThemeColors]
 }
 
 export type ThemeColors =

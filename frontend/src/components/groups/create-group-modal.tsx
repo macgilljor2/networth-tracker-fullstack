@@ -3,14 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { groupsService } from '@/lib/api/groups.service'
 import { accountsService } from '@/lib/api/accounts.service'
-
-interface Account {
-  id: string
-  account_name: string
-  currency: string
-  account_type: string
-  current_balance?: number
-}
+import type { Account } from '@/types'
 
 interface CreateGroupModalProps {
   onClose: () => void

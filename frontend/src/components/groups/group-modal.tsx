@@ -52,10 +52,15 @@ export const GroupModal: React.FC<GroupModalProps> = ({
     setLoading(true)
 
     try {
+      const groupData = {
+        name: data.name,
+        description: data.description || '',
+      }
+
       if (isEdit && group) {
-        await groupsService.updateGroup(group.id, data)
+        await groupsService.updateGroup(group.id, groupData)
       } else {
-        await groupsService.createGroup(data)
+        await groupsService.createGroup(groupData)
       }
       reset()
       onSuccess()

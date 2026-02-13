@@ -113,7 +113,7 @@ apiClient.interceptors.response.use(
           return apiClient(originalRequest)
         } else {
           // No token in response, session invalid
-          clearAuth()
+          useAuthStore.getState().clearAuth()
           window.location.href = '/login'
         }
       } catch (refreshError) {

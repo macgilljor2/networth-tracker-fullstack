@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Change to project directory
+cd "$PROJECT_DIR"
+
+# Start the app
+./start.sh
+
+# Keep Terminal open so user can see logs
+echo ""
+echo "Press any key to stop the app..."
+read -n 1
+./stop.sh

@@ -8,8 +8,7 @@ import { useAuthStore } from '@/stores/auth-store'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const setUser = useAuthStore((state) => state.setUser)
-  const setToken = useAuthStore((state) => state.setToken)
+  const setAuthData = useAuthStore((state) => state.setAuthData)
   const [error, setError] = React.useState<string>('')
   const [loading, setLoading] = React.useState(false)
 
@@ -30,17 +29,22 @@ export default function RegisterPage() {
         password: data.password,
       })
 
-      // Store auth data
-      setToken(loginResponse.access_token)
+      // Store token FIRST so apiClient can use it
+      setAuthData(
+        loginResponse.access_token,
+        loginResponse.expires_in || 1800,
+        null as any // Temporarily set user as null
+      )
 
-      // Fetch user data using axios directly with the token
-      const { apiClient } = await import('@/lib/api/client')
-      const userResponse = await apiClient.get('/api/v1/auth/me', {
-        headers: {
-          Authorization: `Bearer ${loginResponse.access_token}`
-        }
-      })
-      setUser(userResponse.data)
+      // Get current user - apiClient now has token
+      const userResponse = await authService.getCurrentUser()
+
+      // Update auth store with complete user data
+      setAuthData(
+        loginResponse.access_token,
+        loginResponse.expires_in || 1800,
+        userResponse
+      )
 
       // Redirect to dashboard
       router.push('/dashboard')

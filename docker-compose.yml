@@ -19,6 +19,40 @@ services:
     networks:
       - nw_tracker_network
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nw_tracker_backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_ADMIN_USER:-postgres}:${POSTGRES_ADMIN_PASSWORD:-postgres_password}@postgres:5432/${POSTGRES_DB:-nw_tracker}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-secret-key-change-this}
+      JWT_ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - nw_tracker_network
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nw_tracker_frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT:-8000}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    networks:
+      - nw_tracker_network
+
 volumes:
   postgres_data:
     driver: local

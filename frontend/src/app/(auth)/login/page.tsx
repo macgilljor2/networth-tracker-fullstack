@@ -24,15 +24,23 @@ export default function LoginPage() {
         password: data.password,
       })
 
-      // Temporarily set token so getCurrentUser works
-      const setToken = useAuthStore.getState().setAuthData
-      setToken(response.access_token, response.expires_in, {} as any)
+      // Store token FIRST so apiClient can use it for next request
+      // We'll update with user data after we fetch it
+      setAuthData(
+        response.access_token,
+        response.expires_in || 1800,
+        null as any // Temporarily set user as null
+      )
 
-      // Get current user - now has token available
+      // Get current user - apiClient now has token
       const userResponse = await authService.getCurrentUser()
 
-      // Store complete auth data with user
-      setAuthData(response.access_token, response.expires_in, userResponse)
+      // Update auth store with complete user data
+      setAuthData(
+        response.access_token,
+        response.expires_in || 1800,
+        userResponse
+      )
 
       // Redirect to dashboard
       router.push('/dashboard')

@@ -96,8 +96,8 @@ export default function AccountDetailPage({ params }: { params: { id: string } }
     setEditingBalance(balance)
   }
 
-  const handleUpdateBalance = async (data: { amount: number; date: string }) => {
-    if (!editingBalance) return
+  const handleUpdateBalance = async (data?: { amount: number; date: string }) => {
+    if (!editingBalance || !data) return
 
     try {
       await balancesService.updateBalance(accountId, editingBalance.id, {
@@ -168,6 +168,7 @@ export default function AccountDetailPage({ params }: { params: { id: string } }
 
     return chartBalances.map(b => ({
       date: b.date,
+      created_at: b.date,
       balance: b.amount
     }))
   }, [sortedBalances, chartPeriod])
@@ -232,7 +233,7 @@ export default function AccountDetailPage({ params }: { params: { id: string } }
               })()}
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-[#1a1a1a] mb-2">{account.account_name}</h1>
+              <h1 className="text-3xl font-bold text-[#1a1a1a] mb-2">{account.account_name || 'Account'}</h1>
               <div className="flex items-center space-x-3 text-sm text-[#5a5a5a]">
                 <span className="px-3 py-1 bg-[#faf9f6] rounded-lg font-medium capitalize">{account.account_type}</span>
                 <span>•</span>
@@ -508,7 +509,7 @@ export default function AccountDetailPage({ params }: { params: { id: string } }
         onClose={() => setIsAddBalanceModalOpen(false)}
         onSuccess={handleAddBalanceSuccess}
         accountId={accountId}
-        accountName={account.account_name}
+        accountName={account.account_name || 'Account'}
         accountCurrency={account.currency}
       />
 
@@ -538,7 +539,7 @@ export default function AccountDetailPage({ params }: { params: { id: string } }
           onClose={() => setEditingBalance(null)}
           onSuccess={handleUpdateBalance}
           accountId={accountId}
-          accountName={account.account_name}
+          accountName={account.account_name || 'Account'}
           accountCurrency={account.currency}
           initialBalance={editingBalance}
         />
