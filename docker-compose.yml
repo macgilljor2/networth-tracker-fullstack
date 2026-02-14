@@ -25,10 +25,18 @@ services:
       dockerfile: Dockerfile
     container_name: nw_tracker_backend
     environment:
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_ADMIN_USER:-postgres}:${POSTGRES_ADMIN_PASSWORD:-postgres_password}@postgres:5432/${POSTGRES_DB:-nw_tracker}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-secret-key-change-this}
-      JWT_ALGORITHM: HS256
-      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      postgres_host: postgres
+      postgres_port: 5432
+      postgres_db: ${POSTGRES_DB:-nw_tracker}
+      postgres_ddl_user: ${POSTGRES_DDL_USER:-alembic_user}
+      postgres_ddl_password: ${POSTGRES_DDL_PASSWORD:-alembic_password}
+      postgres_rw_user: ${POSTGRES_RW_USER:-app_user}
+      postgres_rw_password: ${POSTGRES_RW_PASSWORD:-app_password}
+      postgres_ro_user: ${POSTGRES_RO_USER:-reporting_user}
+      postgres_ro_password: ${POSTGRES_RO_PASSWORD:-reporting_password}
+      jwt_secret_key: ${JWT_SECRET_KEY:-your-secret-key-change-this}
+      jwt_refresh_secret_key: ${JWT_REFRESH_SECRET_KEY:-your-refresh-secret-key-change-this}
+      jwt_access_token_expire_minutes: 30
     ports:
       - "${BACKEND_PORT:-8000}:8000"
     depends_on:
@@ -59,4 +67,5 @@ volumes:
 
 networks:
   nw_tracker_network:
+    name: nw_tracker_network
     driver: bridge
