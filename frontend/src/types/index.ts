@@ -144,3 +144,6 @@ export interface RegisterResponse {
   email: string
   created_at: string
 }
+
+// Export budget types from budget.ts
+export * from './budget'

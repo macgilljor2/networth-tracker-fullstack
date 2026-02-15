@@ -175,14 +175,43 @@ export default function DashboardPage() {
     const rgb = hexToRgb(primaryColor)
     const primaryBg = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`
 
-    // Collect all unique dates from all group histories only
-    const allDates = new Set<string>()
+    // Calculate cutoff date based on selected time range
+    const now = new Date()
+    const cutoffDate = new Date()
+    switch (selectedTimeRange) {
+      case '1M':
+        cutoffDate.setMonth(now.getMonth() - 1)
+        break
+      case '3M':
+        cutoffDate.setMonth(now.getMonth() - 3)
+        break
+      case '1Y':
+        cutoffDate.setFullYear(now.getFullYear() - 1)
+        break
+      case 'ALL':
+      default:
+        // No cutoff
+        break
+    }
+
+    // Collect ALL unique dates from total and all group histories (filtered by time range)
+    const allDatesSet = new Set<string>()
+
+    // Add total dates
+    filteredBalanceHistory.forEach(p => allDatesSet.add(p.date))
+
+    // Add filtered group dates
     if (fullHistoryResponse?.group_histories) {
       fullHistoryResponse.group_histories.forEach(gh => {
-        gh.history.forEach(h => allDates.add(h.date))
+        gh.history.forEach(h => {
+          if (selectedTimeRange === 'ALL' || new Date(h.date) >= cutoffDate) {
+            allDatesSet.add(h.date)
+          }
+        })
       })
     }
-    const sortedDates = Array.from(allDates).sort()
+
+    const sortedDates = Array.from(allDatesSet).sort()
 
     // Format labels from all dates
     const allLabels = sortedDates.map(dateStr => {
@@ -192,13 +221,14 @@ export default function DashboardPage() {
       return `${month} ${year}`
     })
 
-    // Total uses its own dates only
-    const totalData = filteredBalanceHistory.map(p => p.total_balance_gbp)
+    // Create map for total data
+    const totalDataMap = new Map<string, number>()
+    filteredBalanceHistory.forEach(p => totalDataMap.set(p.date, p.total_balance_gbp))
 
     const datasets: any[] = [
       {
         label: 'Total Net Worth',
-        data: totalData,
+        data: sortedDates.map(date => totalDataMap.get(date) || null),
         borderColor: primaryColor,
         backgroundColor: primaryBg,
         borderWidth: 3,
@@ -209,10 +239,11 @@ export default function DashboardPage() {
         pointHoverBackgroundColor: primaryColor,
         pointHoverBorderColor: '#fff',
         pointHoverBorderWidth: 2,
+        spanGaps: true,
       },
     ]
 
-    // Add group series from API response - align to all dates
+    // Add group series from API response - each plots on its own dates
     if (fullHistoryResponse?.group_histories) {
       const colors = ['#7d8471', '#c17f59', '#a6926a', '#16a34a']
 
@@ -220,10 +251,16 @@ export default function DashboardPage() {
         const color = colors[index % colors.length]
         const isVisible = selectedSeries.includes(groupHist.group_id)
 
+        // Filter group history by time range
+        const filteredGroupHistory = groupHist.history.filter(h => {
+          return selectedTimeRange === 'ALL' || new Date(h.date) >= cutoffDate
+        })
+
         // Create map of date to balance for this group
         const groupDataMap = new Map<string, number>()
-        groupHist.history.forEach(h => groupDataMap.set(h.date, h.total_balance_gbp))
+        filteredGroupHistory.forEach(h => groupDataMap.set(h.date, h.total_balance_gbp))
 
+        // Map to all dates (each dataset plots independently)
         datasets.push({
           label: groupHist.group_name,
           data: sortedDates.map(date => groupDataMap.get(date) || null),
@@ -243,7 +280,7 @@ export default function DashboardPage() {
     }
 
     return { labels: allLabels, datasets }
-  }, [filteredBalanceHistory, fullHistoryResponse, selectedSeries, currentTheme])
+  }, [filteredBalanceHistory, fullHistoryResponse, selectedSeries, currentTheme, selectedTimeRange])
 
   // Series configuration - Total + all groups from API
   const seriesConfig = useMemo(() => {
@@ -554,7 +591,7 @@ export default function DashboardPage() {
                     className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
                       selectedTimeRange === range
                         ? 'bg-primary/10 text-primary border border-primary/30 shadow-sm'
-                        : 'bg-secondary text-secondary hover:bg-primary/10 hover:text-primary'
+                        : 'bg-card text-muted hover:bg-primary/10 hover:text-primary border border-primary/20'
                     }`}
                   >
                     {range}
@@ -572,7 +609,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold text-primary">Show on Chart</h3>
-                <p className="text-sm text-secondary">Toggle series to display • Drag groups to pin them above</p>
+                <p className="text-sm text-muted">Toggle series to display • Drag groups to pin them above</p>
               </div>
               <div className="flex items-center space-x-2">
                 <button
@@ -616,7 +653,7 @@ export default function DashboardPage() {
                       style={{ backgroundColor: series.color }}
                     ></div>
                     <span className={`text-sm font-medium ${
-                      series.disabled ? 'text-primary' : 'text-secondary'
+                      series.disabled ? 'text-primary' : 'text-primary'
                     }`}>
                       {series.label}
                     </span>

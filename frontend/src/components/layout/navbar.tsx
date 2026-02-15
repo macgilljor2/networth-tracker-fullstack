@@ -95,6 +95,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </Link>
             <Link
+              href="/budgets"
+              className={`relative px-2 py-1 text-sm font-medium transition-all duration-300 ${
+                isActive('/budgets')
+                  ? 'text-primary'
+                  : 'hover:text-text-primary'
+              }`}
+              style={{ color: isActive('/budgets') ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
+            >
+              Budgets
+              {isActive('/budgets') && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full shadow-glow" style={{ backgroundColor: 'var(--color-primary)' }} />
+              )}
+            </Link>
+            <Link
               href="/settings"
               className={`relative px-2 py-1 text-sm font-medium transition-all duration-300 ${
                 isActive('/settings')

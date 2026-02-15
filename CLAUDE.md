@@ -109,3 +109,7 @@ Modern web application with FastAPI backend and [React/Vue/Svelte] frontend.
 - Do not edit `/backend/migrations` directly
 - Do not commit `.env` files or `venv/` directory
 - Do not modify auto-generated OpenAPI schemas
+
+## Implementation Plans
+
+- **Budget Feature**: See `/Users/jmacgillivray/.claude/plans/soft-wobbling-diffie.md` for detailed budget tracking implementation plan

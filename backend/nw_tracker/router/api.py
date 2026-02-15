@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from nw_tracker.router.v1 import auth, account, balance, account_group, enums, dashboard, account_types
+from nw_tracker.router.v1 import auth, account, balance, account_group, enums, dashboard, account_types, budget_categories, income, expenses, budget_dashboard
 
 router = APIRouter(
     prefix="/api/v1"
@@ -15,3 +15,7 @@ router.include_router(balance.router)
 router.include_router(account_group.router)
 router.include_router(account_types.router)
 router.include_router(dashboard.router)
+router.include_router(budget_categories.router)
+router.include_router(income.router)
+router.include_router(expenses.router)
+router.include_router(budget_dashboard.router)
