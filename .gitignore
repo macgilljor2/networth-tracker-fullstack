@@ -35,5 +35,8 @@ logs/
 .coverage
 .nox
 
+/load_testing/
+
+
 # Frontend and backend
 # Keep these tracked! Don't ignore the directories themselves
