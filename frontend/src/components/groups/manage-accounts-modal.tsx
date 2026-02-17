@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { groupsService } from '@/lib/api/groups.service'
 import { AccountInGroup } from '@/types'
 import { UpdateGroupRequest } from '@/lib/api/groups.service'
+import { Portal } from '@/components/ui/portal'
 
 interface Account {
   id: string
@@ -83,7 +84,8 @@ export function ManageAccountsModal({ groupId, groupName, groupDescription, curr
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div
         className="glass-card rounded-2xl p-8 max-w-3xl w-full max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -217,5 +219,6 @@ export function ManageAccountsModal({ groupId, groupName, groupDescription, curr
         </div>
       </div>
     </div>
+    </Portal>
   )
 }

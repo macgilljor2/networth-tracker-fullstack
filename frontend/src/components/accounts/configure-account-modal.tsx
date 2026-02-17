@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { accountsService } from '@/lib/api/accounts.service'
 import { Account } from '@/types'
+import { Portal } from '@/components/ui/portal'
 
 export interface ConfigureAccountModalProps {
   isOpen: boolean
@@ -112,7 +113,8 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
       <div
         className="glass-card rounded-2xl p-8 max-w-md w-full"
         onClick={(e) => e.stopPropagation()}
@@ -120,15 +122,15 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#1a1a1a]">Configure Account</h2>
-            <p className="text-sm text-[#5a5a5a]">Account settings and preferences</p>
+            <h2 className="text-2xl font-bold text-primary">Configure Account</h2>
+            <p className="text-sm text-secondary">Account settings and preferences</p>
           </div>
           <button
             onClick={handleClose}
             aria-label="Close modal"
-            className="p-2 rounded-lg hover:bg-[#faf9f6] transition-colors"
+            className="p-2 rounded-lg hover:bg-secondary transition-colors"
           >
-            <svg className="w-6 h-6 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
           </button>
@@ -150,7 +152,7 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Account Name */}
           <div>
-            <label className="block text-sm font-medium text-[#1a1a1a] mb-2">
+            <label className="block text-sm font-medium text-primary mb-2">
               Account Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -159,7 +161,7 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
               className={`w-full px-4 py-3 rounded-xl border bg-white transition-colors ${
                 errors.account_name
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
-                  : 'border-[#d5d9d0] focus:border-[#2d5a27] focus:ring-[#2d5a27]/10'
+                  : 'border focus:border-primary focus:ring-primary/10'
               } focus:outline-none focus:ring-2`}
               {...register('account_name', { required: 'Account name is required' })}
             />
@@ -169,11 +171,11 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
           </div>
 
           {/* Exclusion Toggle */}
-          <div className="pt-4 border-t border-[#d5d9d0]">
+          <div className="pt-4 border-t border">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-semibold text-[#1a1a1a] mb-1">Include in Overall Total</h3>
-                <p className="text-xs text-[#5a5a5a]">
+                <h3 className="text-sm font-semibold text-primary mb-1">Include in Overall Total</h3>
+                <p className="text-xs text-secondary">
                   {isExcluded
                     ? 'This account is currently excluded from the overall net worth total'
                     : 'This account is included in the overall net worth total'
@@ -184,7 +186,7 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
                 type="button"
                 onClick={handleToggleExclusion}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ease-in-out ${
-                  isExcluded ? 'bg-[#a89880]' : 'bg-[#2d5a27]'
+                  isExcluded ? 'bg-muted' : 'bg-primary'
                 }`}
               >
                 <span
@@ -194,7 +196,7 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
                 />
               </button>
             </div>
-            <p className="mt-2 text-xs text-[#5a5a5a]">
+            <p className="mt-2 text-xs text-secondary">
               {isExcluded
                 ? 'Excluded accounts won\'t count toward your total net worth on the dashboard'
                 : 'Toggle to exclude this account from your total net worth calculation'
@@ -258,19 +260,19 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-3 pt-6 border-t border-[#d5d9d0]">
+          <div className="flex space-x-3 pt-6 border-t border">
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 px-6 py-3 rounded-xl border border-[#d5d9d0] text-[#1a1a1a] font-semibold hover:bg-[#faf9f6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 rounded-xl border text-primary font-semibold hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 rounded-xl bg-[#2d5a27] hover:bg-[#1e3d1a] text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="flex-1 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <>
@@ -290,5 +292,6 @@ export const ConfigureAccountModal: React.FC<ConfigureAccountModalProps> = ({
         </form>
       </div>
     </div>
+    </Portal>
   )
 }

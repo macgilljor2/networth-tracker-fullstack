@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { balancesService } from '@/lib/api/balances.service'
 import { AccountWithBalances } from '@/types'
+import { Portal } from '@/components/ui/portal'
 
 export interface BulkBalanceModalProps {
   isOpen: boolean
@@ -157,7 +158,8 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
   const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
       <div
         className="glass-card rounded-2xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
@@ -165,15 +167,15 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#1a1a1a]">Bulk Add Balances</h2>
-            <p className="text-sm text-[#5a5a5a]">Add balances for {today}</p>
+            <h2 className="text-2xl font-bold text-primary">Bulk Add Balances</h2>
+            <p className="text-sm text-secondary">Add balances for {today}</p>
           </div>
           <button
             onClick={handleClose}
             aria-label="Close modal"
-            className="p-2 rounded-lg hover:bg-[#faf9f6] transition-colors"
+            className="p-2 rounded-lg hover:bg-secondary transition-colors"
           >
-            <svg className="w-6 h-6 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
           </button>
@@ -205,23 +207,23 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
                 key={account.id}
                 className={`p-4 rounded-xl border transition-all ${
                   isSubmitted
-                    ? 'bg-[#2d5a27]/5 border-[#2d5a27]/30'
+                    ? 'bg-primary/5 border-primary/30'
                     : isFailed
                     ? 'bg-red-50 border-red-200'
-                    : 'bg-[#faf9f6] border-[#d5d9d0]'
+                    : 'bg-secondary border'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="font-semibold text-[#1a1a1a]">{account.account_name || account.name || 'Unnamed Account'}</p>
-                    <p className="text-sm text-[#a89880] capitalize">{account.account_type} • {account.currency}</p>
+                    <p className="font-semibold text-primary">{account.account_name || account.name || 'Unnamed Account'}</p>
+                    <p className="text-sm text-muted capitalize">{account.account_type} • {account.currency}</p>
                     {isFailed && (
                       <p className="text-xs text-red-600 mt-1">{isFailed}</p>
                     )}
                   </div>
                   <div className="flex items-center space-x-3">
                     {isSubmitted ? (
-                      <div className="flex items-center space-x-2 text-[#2d5a27]">
+                      <div className="flex items-center space-x-2 text-primary">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/>
                         </svg>
@@ -230,7 +232,7 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
                     ) : (
                       <>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-mono text-[#a89880]">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-mono text-muted">
                             {currencySymbol}
                           </span>
                           <input
@@ -240,13 +242,13 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
                             disabled={isSubmitting}
                             value={balances[account.id] !== undefined ? balances[account.id] : ''}
                             onChange={(e) => handleBalanceChange(account.id, e.target.value)}
-                            className="no-spinner w-48 pl-8 pr-3 py-2 rounded-lg border border-[#d5d9d0] bg-white text-base font-mono focus:outline-none focus:ring-2 focus:ring-[#2d5a27]/10 focus:border-[#2d5a27] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="no-spinner w-48 pl-8 pr-3 py-2 rounded-lg border bg-white text-base font-mono focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed"
                           />
                         </div>
                         <button
                           onClick={() => handleSubmit(account.id)}
                           disabled={!hasBalance || isSubmitting}
-                          className="px-4 py-2 rounded-lg bg-[#2d5a27] hover:bg-[#1e3d1a] text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
+                          className="px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
                         >
                           {isSubmitting ? (
                             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -269,18 +271,18 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex space-x-3 pt-6 border-t border-[#d5d9d0]">
+        <div className="flex space-x-3 pt-6 border-t border">
           <button
             onClick={handleClose}
             disabled={loading}
-            className="flex-1 px-6 py-3 rounded-xl border border-[#d5d9d0] text-[#1a1a1a] font-semibold hover:bg-[#faf9f6] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-6 py-3 rounded-xl border text-primary font-semibold hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Close
           </button>
           <button
             onClick={handleSubmitAll}
             disabled={loading || Object.keys(balances).length === 0}
-            className="flex-1 px-6 py-3 rounded-xl bg-[#2d5a27] hover:bg-[#1e3d1a] text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+            className="flex-1 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
           >
             {loading ? (
               <>
@@ -299,5 +301,6 @@ export const BulkBalanceModal: React.FC<BulkBalanceModalProps> = ({
         </div>
       </div>
     </div>
+    </Portal>
   )
 }

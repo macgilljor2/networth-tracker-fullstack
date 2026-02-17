@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Modal } from '@/components/ui/modal'
 import { budgetCategoriesService } from '@/lib/api/budgets.service'
-import { CreateBudgetCategoryRequest } from '@/types/budget'
+import { CreateBudgetCategoryRequest, BudgetCategory } from '@/types/budget'
 
 export interface BudgetCategoryModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess?: () => void
+  categoryToEdit?: BudgetCategory
 }
 
 const PRESET_ICONS = [
@@ -15,14 +16,24 @@ const PRESET_ICONS = [
 ]
 
 const PRESET_COLORS = [
-  '#2d5a27', '#5a8f5a', '#7d8471', '#c17f59', '#d4a574',
-  '#6b8e9f', '#9f7b6b', '#8b7d6a', '#a89880', '#7a8b7a'
+  'var(--color-primary)',       // Theme primary
+  'var(--color-primary-light)',  // Light primary
+  '#6366f1',                   // Indigo
+  '#8b5cf6',                   // Violet
+  '#3b82f6',                   // Blue
+  '#1e40af',                   // Deep blue
+  '#0891b2',                   // Cyan
+  '#0d9488',                   // Teal
+  '#059669',                   // Emerald
+  '#4f46e5',                   // Purple
+  '#7c3aed',                   // Light purple
 ]
 
 export const BudgetCategoryModal: React.FC<BudgetCategoryModalProps> = ({
   isOpen,
   onClose,
-  onSuccess
+  onSuccess,
+  categoryToEdit
 }) => {
   const [formData, setFormData] = useState<CreateBudgetCategoryRequest>({
     name: '',
@@ -33,19 +44,30 @@ export const BudgetCategoryModal: React.FC<BudgetCategoryModalProps> = ({
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const isEditing = !!categoryToEdit
 
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        name: '',
-        description: '',
-        icon: '',
-        color: PRESET_COLORS[0],
-        is_essential: false,
-      })
+      if (categoryToEdit) {
+        setFormData({
+          name: categoryToEdit.name,
+          description: categoryToEdit.description || '',
+          icon: categoryToEdit.icon || '',
+          color: categoryToEdit.color || PRESET_COLORS[0],
+          is_essential: categoryToEdit.is_essential,
+        })
+      } else {
+        setFormData({
+          name: '',
+          description: '',
+          icon: '',
+          color: PRESET_COLORS[0],
+          is_essential: false,
+        })
+      }
       setError('')
     }
-  }, [isOpen])
+  }, [isOpen, categoryToEdit])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -53,18 +75,22 @@ export const BudgetCategoryModal: React.FC<BudgetCategoryModalProps> = ({
     setError('')
 
     try {
-      await budgetCategoriesService.createCategory(formData)
+      if (isEditing && categoryToEdit) {
+        await budgetCategoriesService.updateCategory(categoryToEdit.id, formData)
+      } else {
+        await budgetCategoriesService.createCategory(formData)
+      }
       onSuccess?.()
       onClose()
     } catch (err: any) {
-      setError(err.message || 'Failed to create category')
+      setError(err.message || `Failed to ${isEditing ? 'update' : 'create'} category`)
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create Budget Category">
+    <Modal isOpen={isOpen} onClose={onClose} title={isEditing ? 'Edit Category' : 'Create Budget Category'}>
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
           <div className="glass-card rounded-lg p-4 border-l-4 border-accent fade-in">
@@ -195,7 +221,7 @@ export const BudgetCategoryModal: React.FC<BudgetCategoryModalProps> = ({
             disabled={loading || !formData.name}
             className="flex-1 btn-primary px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-glow-strong transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed text-white"
           >
-            {loading ? 'Creating...' : 'Create Category'}
+            {loading ? (isEditing ? 'Updating...' : 'Creating...') : (isEditing ? 'Update Category' : 'Create Category')}
           </button>
         </div>
       </form>

@@ -150,7 +150,7 @@ export default function AccountsPage() {
 
       {/* Summary Section */}
       <div className="glass-card rounded-2xl p-6">
-        <h2 className="text-sm font-semibold text-secondary uppercase tracking-wider mb-4">Summary</h2>
+        <h2 className="text-sm font-semibold text-primary uppercase tracking-wider mb-4">Summary</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="glass-card rounded-xl p-5 shadow-sm fade-in">
             <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-2">Total Accounts</p>
@@ -185,7 +185,7 @@ export default function AccountsPage() {
               className={`p-2 rounded-md transition-all duration-200 ${
                 layoutMode === 'grid'
                   ? 'bg-primary text-white shadow-sm'
-                  : 'text-secondary hover:text-primary'
+                  : 'text-primary hover:bg-primary/10'
               }`}
               title="Grid view"
             >
@@ -198,7 +198,7 @@ export default function AccountsPage() {
               className={`p-2 rounded-md transition-all duration-200 ${
                 layoutMode === 'list'
                   ? 'bg-primary text-white shadow-sm'
-                  : 'text-secondary hover:text-primary'
+                  : 'text-primary hover:bg-primary/10'
               }`}
               title="List view"
             >
@@ -214,7 +214,7 @@ export default function AccountsPage() {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 viewMode === 'all'
                   ? 'bg-primary text-white shadow-sm'
-                  : 'text-secondary hover:text-primary'
+                  : 'text-primary hover:bg-primary/10'
               }`}
             >
               All Together
@@ -224,7 +224,7 @@ export default function AccountsPage() {
               className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 viewMode === 'grouped'
                   ? 'bg-primary text-white shadow-sm'
-                  : 'text-secondary hover:text-primary'
+                  : 'text-primary hover:bg-primary/10'
               }`}
             >
               By Type

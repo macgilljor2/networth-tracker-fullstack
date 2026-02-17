@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { groupsService } from '@/lib/api/groups.service'
 import { accountsService } from '@/lib/api/accounts.service'
 import type { Account } from '@/types'
+import { Portal } from '@/components/ui/portal'
 
 interface CreateGroupModalProps {
   onClose: () => void
@@ -82,11 +83,12 @@ export function CreateGroupModal({ onClose, onSuccess }: CreateGroupModalProps) 
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div
-        className="glass-card rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+        <div
+          className="glass-card rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] flex flex-col"
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Header */}
         <div className="flex items-start justify-between mb-6 flex-shrink-0">
           <div>
@@ -207,5 +209,6 @@ export function CreateGroupModal({ onClose, onSuccess }: CreateGroupModalProps) 
         </div>
       </div>
     </div>
+    </Portal>
   )
 }

@@ -68,6 +68,26 @@ const config: Config = {
           dark: '#a36547',
         },
       },
+      textColor: {
+        accent: {
+          DEFAULT: 'var(--color-accent)',
+        },
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+        },
+        secondary: 'var(--color-text-secondary)',
+        muted: 'var(--color-text-muted)',
+      },
+      backgroundColor: {
+        accent: {
+          DEFAULT: 'var(--color-accent)',
+          hover: 'var(--color-accent-hover)',
+        },
+        primary: {
+          DEFAULT: 'var(--color-primary)',
+          hover: 'var(--color-primary-hover)',
+        },
+      },
       fontFamily: {
         sans: ['var(--font-quicksand)', 'Quicksand', 'sans-serif'],
         display: ['var(--font-playfair)', 'Playfair Display', 'serif'],

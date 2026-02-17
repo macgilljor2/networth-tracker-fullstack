@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from 'react'
 import { balancesService } from '@/lib/api/balances.service'
+import { Portal } from '@/components/ui/portal'
 
 interface BalanceRow {
   date: string
@@ -196,7 +197,8 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
       <div
         className="glass-card rounded-2xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
@@ -204,8 +206,8 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#1a1a1a]">Import Balances from CSV</h2>
-            <p className="text-sm text-[#5a5a5a]">
+            <h2 className="text-2xl font-bold text-primary">Import Balances from CSV</h2>
+            <p className="text-sm text-secondary">
               {step === 'upload' && 'Upload a CSV file with date and balance columns'}
               {step === 'preview' && `Review ${balances.length} balance entries before importing`}
               {step === 'submitting' && 'Importing balances...'}
@@ -214,10 +216,10 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
           <button
             onClick={handleClose}
             aria-label="Close modal"
-            className="p-2 rounded-lg hover:bg-[#faf9f6] transition-colors"
+            className="p-2 rounded-lg hover:bg-secondary transition-colors"
             disabled={step === 'submitting'}
           >
-            <svg className="w-6 h-6 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -248,7 +250,7 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
             <div
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-              className="border-2 border-dashed border-[#d5d9d0] rounded-xl p-12 text-center cursor-pointer hover:bg-[#faf9f6] transition-colors"
+              className="border-2 border-dashed border rounded-xl p-12 text-center cursor-pointer hover:bg-secondary transition-colors"
               onClick={() => fileInputRef.current?.click()}
             >
               <input
@@ -258,19 +260,19 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
                 onChange={handleFileSelect}
                 className="hidden"
               />
-              <svg className="w-12 h-12 text-[#7d8471] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-12 h-12 text-muted mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              <p className="text-lg font-medium text-[#1a1a1a] mb-2">
+              <p className="text-lg font-medium text-primary mb-2">
                 Drop your CSV file here, or click to browse
               </p>
-              <p className="text-sm text-[#5a5a5a]">Supports .csv files only</p>
+              <p className="text-sm text-secondary">Supports .csv files only</p>
             </div>
 
             {/* CSV Format Instructions */}
-            <div className="mt-6 p-4 bg-[#faf9f6] rounded-xl">
-              <h3 className="text-sm font-semibold text-[#1a1a1a] mb-3">CSV Format Requirements:</h3>
-              <div className="text-sm text-[#5a5a5a] space-y-2">
+            <div className="mt-6 p-4 bg-secondary rounded-xl">
+              <h3 className="text-sm font-semibold text-primary mb-3">CSV Format Requirements:</h3>
+              <div className="text-sm text-secondary space-y-2">
                 <p>• First column: Date (YYYY-MM-DD format)</p>
                 <p>• Second column: Balance amount (numeric, e.g., 1250.50)</p>
                 <p>• Optional header row</p>
@@ -285,10 +287,10 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex space-x-3 pt-6 border-t border-[#d5d9d0]">
+            <div className="flex space-x-3 pt-6 border-t border">
               <button
                 onClick={handleClose}
-                className="flex-1 px-6 py-3 rounded-xl border border-[#d5d9d0] text-[#1a1a1a] font-semibold hover:bg-[#faf9f6] transition-colors"
+                className="flex-1 px-6 py-3 rounded-xl border text-primary font-semibold hover:bg-secondary transition-colors"
               >
                 Cancel
               </button>
@@ -299,44 +301,44 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
         {step === 'preview' && (
           <>
             {/* Summary */}
-            <div className="mb-6 p-4 bg-[#faf9f6] rounded-xl">
+            <div className="mb-6 p-4 bg-secondary rounded-xl">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#5a5a5a]">Total entries</p>
-                  <p className="text-2xl font-bold text-[#1a1a1a]">{balances.length}</p>
+                  <p className="text-sm text-secondary">Total entries</p>
+                  <p className="text-2xl font-bold text-primary">{balances.length}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-[#5a5a5a]">Valid entries</p>
-                  <p className="text-2xl font-bold text-[#2d5a27]">{balances.filter(b => b.isValid).length}</p>
+                  <p className="text-sm text-secondary">Valid entries</p>
+                  <p className="text-2xl font-bold text-primary">{balances.filter(b => b.isValid).length}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-[#5a5a5a]">Invalid entries</p>
-                  <p className="text-2xl font-bold text-[#c17f59]">{balances.filter(b => !b.isValid).length}</p>
+                  <p className="text-sm text-secondary">Invalid entries</p>
+                  <p className="text-2xl font-bold text-accent">{balances.filter(b => !b.isValid).length}</p>
                 </div>
               </div>
             </div>
 
             {/* Preview Table */}
-            <div className="border border-[#d5d9d0] rounded-xl overflow-hidden mb-6">
+            <div className="border rounded-xl overflow-hidden mb-6">
               <div className="max-h-80 overflow-y-auto">
                 <table className="w-full">
-                  <thead className="bg-[#faf9f6] sticky top-0">
+                  <thead className="bg-secondary sticky top-0">
                     <tr>
-                      <th className="p-3 text-left text-xs font-semibold text-[#5a5a5a] uppercase">Date</th>
-                      <th className="p-3 text-left text-xs font-semibold text-[#5a5a5a] uppercase">Balance</th>
-                      <th className="p-3 text-left text-xs font-semibold text-[#5a5a5a] uppercase">Status</th>
+                      <th className="p-3 text-left text-xs font-semibold text-secondary uppercase">Date</th>
+                      <th className="p-3 text-left text-xs font-semibold text-secondary uppercase">Balance</th>
+                      <th className="p-3 text-left text-xs font-semibold text-secondary uppercase">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {balances.map((balance, idx) => (
-                      <tr key={idx} className="border-t border-[#d5d9d0]">
+                      <tr key={idx} className="border-t border">
                         <td className="p-3 text-sm font-mono">{balance.date}</td>
                         <td className="p-3 text-sm font-mono font-semibold">
                           {currencySymbol}{balance.amount.toFixed(2)}
                         </td>
                         <td className="p-3 text-sm">
                           {balance.isValid ? (
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-[#2d5a27]/10 text-[#2d5a27]">
+                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
                               ✓ Valid
                             </span>
                           ) : (
@@ -353,20 +355,20 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex space-x-3 pt-6 border-t border-[#d5d9d0]">
+            <div className="flex space-x-3 pt-6 border-t border">
               <button
                 onClick={() => {
                   setStep('upload')
                   setErrors([])
                 }}
-                className="flex-1 px-6 py-3 rounded-xl border border-[#d5d9d0] text-[#1a1a1a] font-semibold hover:bg-[#faf9f6] transition-colors"
+                className="flex-1 px-6 py-3 rounded-xl border text-primary font-semibold hover:bg-secondary transition-colors"
               >
                 Back
               </button>
               <button
                 onClick={handleSubmit}
                 disabled={balances.filter(b => b.isValid).length === 0}
-                className="flex-1 px-6 py-3 rounded-xl bg-[#2d5a27] hover:bg-[#1e3d1a] text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className="flex-1 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -382,14 +384,14 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
             {/* Progress */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-[#5a5a5a]">Importing balances...</p>
-                <p className="text-sm font-medium text-[#1a1a1a]">
+                <p className="text-sm text-secondary">Importing balances...</p>
+                <p className="text-sm font-medium text-primary">
                   {submitProgress.current} / {submitProgress.total}
                 </p>
               </div>
-              <div className="w-full bg-[#faf9f6] rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-secondary rounded-full h-3 overflow-hidden">
                 <div
-                  className="h-full bg-[#2d5a27] transition-all duration-300"
+                  className="h-full bg-primary transition-all duration-300"
                   style={{ width: `${(submitProgress.current / submitProgress.total) * 100}%` }}
                 />
               </div>
@@ -397,10 +399,10 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
 
             {/* Current Status */}
             <div className="text-center py-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#2d5a27]/10 mb-4">
-                <div className="w-8 h-8 border-3 border-[#2d5a27] border-t-transparent rounded-full animate-spin"></div>
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
+                <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
               </div>
-              <p className="text-lg font-medium text-[#1a1a1a]">
+              <p className="text-lg font-medium text-primary">
                 {submitProgress.current < submitProgress.total
                   ? `Processing entry ${submitProgress.current + 1} of ${submitProgress.total}`
                   : 'Finishing up...'
@@ -411,5 +413,6 @@ export const ImportCSVModal: React.FC<ImportCSVModalProps> = ({
         )}
       </div>
     </div>
+    </Portal>
   )
 }

@@ -6,6 +6,7 @@ import { accountsService } from '@/lib/api/accounts.service'
 import { balancesService } from '@/lib/api/balances.service'
 import { accountTypesService } from '@/lib/api/account-types.service'
 import { AccountType } from '@/lib/api/account-types.service'
+import { Portal } from '@/components/ui/portal'
 
 export interface CreateAccountData {
   account_name: string
@@ -134,7 +135,8 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={handleClose}>
       <div
         className="glass-card rounded-2xl p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
@@ -142,15 +144,15 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#3d3428]">Add New Account</h2>
-            <p className="text-sm text-[#6d5c4a]">Create a new account to track</p>
+            <h2 className="text-2xl font-bold text-primary">Add New Account</h2>
+            <p className="text-sm text-secondary">Create a new account to track</p>
           </div>
           <button
             onClick={handleClose}
             aria-label="Close modal"
-            className="p-2 rounded-lg hover:bg-[#e5ddd3] transition-colors"
+            className="p-2 rounded-lg hover:bg-secondary transition-colors"
           >
-            <svg className="w-6 h-6 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
           </button>
@@ -172,7 +174,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {/* Account Name */}
           <div>
-            <label className="block text-sm font-medium text-[#3d3428] mb-2">
+            <label className="block text-sm font-medium text-primary mb-2">
               Account Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -181,7 +183,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
               className={`w-full px-4 py-3 rounded-xl border bg-white transition-colors ${
                 errors.account_name
                   ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
-                  : 'border-[#e5ddd3] focus:border-[#5a8f5a] focus:ring-[#5a8f5a]/10'
+                  : 'border focus:border-primary focus:ring-primary/10'
               } focus:outline-none focus:ring-2`}
               {...register('account_name', { required: 'Account name is required' })}
             />
@@ -192,7 +194,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
 
           {/* Account Type */}
           <div>
-            <label className="block text-sm font-medium text-[#3d3428] mb-2">
+            <label className="block text-sm font-medium text-primary mb-2">
               Account Type <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -200,7 +202,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
                 className={`w-full px-4 py-3 rounded-xl border bg-white appearance-none cursor-pointer transition-colors ${
                   errors.account_type
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
-                    : 'border-[#e5ddd3] focus:border-[#5a8f5a] focus:ring-[#5a8f5a]/10'
+                    : 'border focus:border-primary focus:ring-primary/10'
                 } focus:outline-none focus:ring-2 pr-10`}
                 {...register('account_type', { required: 'Account type is required' })}
               >
@@ -212,7 +214,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
                 ))}
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg className="w-5 h-5 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
@@ -224,7 +226,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
 
           {/* Currency */}
           <div>
-            <label className="block text-sm font-medium text-[#3d3428] mb-2">
+            <label className="block text-sm font-medium text-primary mb-2">
               Currency <span className="text-red-500">*</span>
             </label>
             <div className="relative">
@@ -232,7 +234,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
                 className={`w-full px-4 py-3 rounded-xl border bg-white appearance-none cursor-pointer transition-colors ${
                   errors.currency
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-500/10'
-                    : 'border-[#e5ddd3] focus:border-[#5a8f5a] focus:ring-[#5a8f5a]/10'
+                    : 'border focus:border-primary focus:ring-primary/10'
                 } focus:outline-none focus:ring-2 pr-10`}
                 {...register('currency', { required: 'Currency is required' })}
               >
@@ -244,7 +246,7 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
                 ))}
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg className="w-5 h-5 text-[#a89880]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
@@ -255,16 +257,16 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
           </div>
 
           {/* Initial Balance (Optional) */}
-          <div className="pt-4 border-t border-[#e5ddd3]">
-            <p className="text-sm font-medium text-[#3d3428] mb-3">Initial Balance (Optional)</p>
+          <div className="pt-4 border-t border">
+            <p className="text-sm font-medium text-primary mb-3">Initial Balance (Optional)</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-[#6d5c4a] mb-1">Amount</label>
+                <label className="block text-xs font-medium text-secondary mb-1">Amount</label>
                 <input
                   type="number"
                   step="0.01"
                   placeholder="0.00"
-                  className="w-full px-3 py-2 rounded-lg border border-[#e5ddd3] bg-white focus:border-[#5a8f5a] focus:ring-2 focus:ring-[#5a8f5a]/10 focus:outline-none transition-colors text-sm"
+                  className="w-full px-3 py-2 rounded-lg border bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none transition-colors text-sm"
                   {...register('initial_balance', {
                     valueAsNumber: true,
                     min: 0,
@@ -272,10 +274,10 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-[#6d5c4a] mb-1">Date</label>
+                <label className="block text-xs font-medium text-secondary mb-1">Date</label>
                 <input
                   type="date"
-                  className="w-full px-3 py-2 rounded-lg border border-[#e5ddd3] bg-white focus:border-[#5a8f5a] focus:ring-2 focus:ring-[#5a8f5a]/10 focus:outline-none transition-colors text-sm"
+                  className="w-full px-3 py-2 rounded-lg border bg-white focus:border-primary focus:ring-2 focus:ring-primary/10 focus:outline-none transition-colors text-sm"
                   {...register('balance_date')}
                 />
               </div>
@@ -283,19 +285,19 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-3 pt-6 border-t border-[#e5ddd3]">
+          <div className="flex space-x-3 pt-6 border-t border">
             <button
               type="button"
               onClick={handleClose}
               disabled={loading}
-              className="flex-1 px-6 py-3 rounded-xl border border-[#e5ddd3] text-[#3d3428] font-semibold hover:bg-[#faf8f5] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-6 py-3 rounded-xl border text-primary font-semibold hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-6 py-3 rounded-xl bg-[#5a8f5a] hover:bg-[#3d6b3d] text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="flex-1 px-6 py-3 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               {loading ? (
                 <>
@@ -315,5 +317,6 @@ export const AddAccountModal: React.FC<AddAccountModalProps> = ({
         </form>
       </div>
     </div>
+    </Portal>
   )
 }

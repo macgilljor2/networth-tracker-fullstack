@@ -4,8 +4,11 @@ import React, { useState, useEffect } from 'react'
 import { budgetDashboardService, budgetCategoriesService, incomeService, expensesService } from '@/lib/api/budgets.service'
 import { BudgetSummary, BudgetCategory, Income, Expense, Frequency } from '@/types/budget'
 import { BudgetCategoryModal } from '@/components/budgets/budget-category-modal'
+import { CategoryDetailModal } from '@/components/budgets/category-detail-modal'
+import { SpendingBreakdown } from '@/components/budgets/spending-breakdown'
 import { IncomeModal } from '@/components/budgets/income-modal'
 import { ExpenseModal } from '@/components/budgets/expense-modal'
+import { Portal } from '@/components/ui/portal'
 
 export default function BudgetsPage() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
@@ -25,6 +28,8 @@ export default function BudgetsPage() {
 
   // Modals
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
+  const [categoryDetailModalOpen, setCategoryDetailModalOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<BudgetCategory | null>(null)
   const [incomeModalOpen, setIncomeModalOpen] = useState(false)
   const [expenseModalOpen, setExpenseModalOpen] = useState(false)
   const [incomeModalFrequency, setIncomeModalFrequency] = useState<Frequency | undefined>()
@@ -215,7 +220,7 @@ export default function BudgetsPage() {
       {/* Two Column Layout - Income & Expenses */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Income */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           {/* Recurring Income */}
           <div className="glass-card rounded-xl p-5 fade-in" style={{ animationDelay: '0.25s' }}>
             <div className="flex items-center justify-between mb-4">
@@ -242,8 +247,8 @@ export default function BudgetsPage() {
                     <div className="absolute top-3 right-3 flex items-center space-x-2">
                       <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
                         item.frequency === Frequency.MONTHLY
-                          ? 'bg-blue-100 text-blue-700'
-                          : 'bg-purple-100 text-purple-700'
+                          ? 'bg-blue-100 text-blue-600'
+                          : 'bg-purple-100 text-purple-600'
                       }`}>
                         {item.frequency === Frequency.MONTHLY ? 'Monthly' : 'Yearly'}
                       </span>
@@ -389,6 +394,9 @@ export default function BudgetsPage() {
               </div>
             )}
           </div>
+
+          {/* Spending Breakdown - Fills available space */}
+          <SpendingBreakdown expenses={expenses} categories={categories} selectedYear={selectedYear} />
         </div>
 
         {/* Right Column - Expenses by Category */}
@@ -421,7 +429,14 @@ export default function BudgetsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {expensesByCategory.map((cat) => (
-                <div key={cat.id} className="p-4 rounded-xl bg-card border border-primary/10">
+                <div
+                  key={cat.id}
+                  className="p-4 rounded-xl bg-card border border-primary/10 cursor-pointer hover:border-primary/50 transition-all"
+                  onClick={() => {
+                    setSelectedCategory(cat)
+                    setCategoryDetailModalOpen(true)
+                  }}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <div></div>
                     <div className="flex items-center gap-3">
@@ -441,7 +456,8 @@ export default function BudgetsPage() {
                       </div>
                     </div>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
                         setExpenseModalFrequency(Frequency.MONTHLY)
                         setInitialCategoryId(cat.id)
                         setExpenseModalOpen(true)
@@ -556,9 +572,35 @@ export default function BudgetsPage() {
       {/* Modals */}
       <BudgetCategoryModal
         isOpen={categoryModalOpen}
-        onClose={() => setCategoryModalOpen(false)}
-        onSuccess={fetchData}
+        onClose={() => {
+          setCategoryModalOpen(false)
+          setSelectedCategory(null)
+        }}
+        onSuccess={() => {
+          fetchData()
+          setSelectedCategory(null)
+        }}
+        categoryToEdit={selectedCategory || undefined}
       />
+      {selectedCategory && (
+        <CategoryDetailModal
+          isOpen={categoryDetailModalOpen}
+          onClose={() => {
+            setCategoryDetailModalOpen(false)
+            setSelectedCategory(null)
+          }}
+          category={selectedCategory}
+          expenses={expenses}
+          onEdit={() => {
+            setCategoryDetailModalOpen(false)
+            setCategoryModalOpen(true)
+          }}
+          onDelete={() => {
+            setCategoryDetailModalOpen(false)
+            setItemToDelete({ type: 'category', id: selectedCategory.id })
+          }}
+        />
+      )}
       <IncomeModal
         isOpen={incomeModalOpen}
         onClose={() => {
@@ -588,42 +630,51 @@ export default function BudgetsPage() {
 
       {/* Delete Confirmation Modal */}
       {itemToDelete && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 fade-in">
-          <div className="glass-card rounded-2xl p-8 max-w-md w-full mx-4">
-            <h3 className="text-2xl font-display font-bold text-primary mb-4">Confirm Delete</h3>
-            <p className="text-secondary mb-6">
-              Are you sure you want to delete this {itemToDelete.type}? This action cannot be undone.
-            </p>
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => setItemToDelete(null)}
-                className="flex-1 px-6 py-3 rounded-xl font-semibold glass-card hover:shadow-md transition-all duration-300 text-primary"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    if (itemToDelete.type === 'income') {
-                      await incomeService.deleteIncome(itemToDelete.id)
-                    } else if (itemToDelete.type === 'expense') {
-                      await expensesService.deleteExpense(itemToDelete.id)
-                    } else if (itemToDelete.type === 'category') {
-                      await budgetCategoriesService.deleteCategory(itemToDelete.id)
-                    }
+        <Portal>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 fade-in">
+            <div className="glass-card rounded-2xl p-8 max-w-md w-full mx-4">
+              <h3 className="text-2xl font-display font-bold text-primary mb-4">Confirm Delete</h3>
+              <p className="text-primary mb-6">
+                {itemToDelete.type === 'category' && selectedCategory
+                  ? `Are you sure you want to delete "${selectedCategory.name}"? This will also delete ${expenses.filter(e => e.category_id === selectedCategory.id).length} expense(s) in this category. This action cannot be undone.`
+                  : `Are you sure you want to delete this ${itemToDelete.type}? This action cannot be undone.`
+                }
+              </p>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => {
                     setItemToDelete(null)
-                    fetchData()
-                  } catch (err: any) {
-                    alert(err.message || 'Failed to delete')
-                  }
-                }}
-                className="flex-1 px-6 py-3 rounded-xl font-semibold bg-accent hover:bg-accent/80 text-white transition-all duration-300"
-              >
-                Delete
-              </button>
+                    setSelectedCategory(null)
+                  }}
+                  className="flex-1 px-6 py-3 rounded-xl font-semibold glass-card hover:shadow-md transition-all duration-300 text-primary"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    try {
+                      if (itemToDelete.type === 'income') {
+                        await incomeService.deleteIncome(itemToDelete.id)
+                      } else if (itemToDelete.type === 'expense') {
+                        await expensesService.deleteExpense(itemToDelete.id)
+                      } else if (itemToDelete.type === 'category') {
+                        await budgetCategoriesService.deleteCategory(itemToDelete.id)
+                      }
+                      setItemToDelete(null)
+                      setSelectedCategory(null)
+                      fetchData()
+                    } catch (err: any) {
+                      alert(err.message || 'Failed to delete')
+                    }
+                  }}
+                  className="flex-1 px-6 py-3 rounded-xl font-semibold bg-accent hover:bg-accent/80 text-white transition-all duration-300"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </Portal>
       )}
     </div>
   )

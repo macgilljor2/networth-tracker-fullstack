@@ -13,6 +13,7 @@ import { CreateGroupModal } from '@/components/groups/create-group-modal'
 import { DashboardHistoryResponse, AccountGroup } from '@/types'
 import { AccountGroupIcon } from '@/lib/icons'
 import { useTheme } from '@/components/providers/theme-provider'
+import { Portal } from '@/components/ui/portal'
 
 type TimeRange = '1M' | '3M' | '1Y' | 'ALL'
 
@@ -175,6 +176,9 @@ export default function DashboardPage() {
     const rgb = hexToRgb(primaryColor)
     const primaryBg = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`
 
+    // Get palette from theme for group colors
+    const palette = currentTheme?.colors?.palette || ['#2d5a27', '#c17f59', '#7d8471', '#a6926a']
+
     // Calculate cutoff date based on selected time range
     const now = new Date()
     const cutoffDate = new Date()
@@ -245,10 +249,8 @@ export default function DashboardPage() {
 
     // Add group series from API response - each plots on its own dates
     if (fullHistoryResponse?.group_histories) {
-      const colors = ['#7d8471', '#c17f59', '#a6926a', '#16a34a']
-
       fullHistoryResponse.group_histories.forEach((groupHist, index) => {
-        const color = colors[index % colors.length]
+        const color = palette[(index + 1) % palette.length]
         const isVisible = selectedSeries.includes(groupHist.group_id)
 
         // Filter group history by time range
@@ -288,11 +290,13 @@ export default function DashboardPage() {
       { key: 'total', label: 'Total Net Worth', color: 'var(--color-primary)', disabled: true },
     ]
 
+    // Get palette from theme for group colors
+    const palette = currentTheme?.colors?.palette || ['#2d5a27', '#c17f59', '#7d8471', '#a6926a']
+
     // Add all groups from history response
     if (fullHistoryResponse?.group_histories) {
-      const colors = ['#7d8471', '#c17f59', '#a6926a', '#16a34a']
       fullHistoryResponse.group_histories.forEach((groupHist, index) => {
-        const color = colors[index % colors.length]
+        const color = palette[(index + 1) % palette.length]
         config.push({
           key: groupHist.group_id,
           label: groupHist.group_name,
@@ -303,7 +307,7 @@ export default function DashboardPage() {
     }
 
     return config
-  }, [fullHistoryResponse])
+  }, [fullHistoryResponse, currentTheme])
 
   const handleSeriesToggle = (seriesKey: string) => {
     if (seriesKey === 'total') return // Can't toggle total
@@ -372,13 +376,16 @@ export default function DashboardPage() {
 
   // Generate consistent color for account type based on name
   const getAccountTypeColor = (accountType: string, forBackground = false) => {
-    // System defaults
+    // Get palette from theme
+    const palette = currentTheme?.colors?.palette || ['#2d5a27', '#c17f59', '#7d8471', '#a6926a']
+
+    // System defaults - use theme colors where possible
     const systemColors: Record<string, string> = {
-      savings: currentTheme?.colors?.primary || '#2d5a27',
-      investment: '#7d8471',
-      current: '#c17f59',
-      loan: '#c17f59',
-      credit: '#c17f59',
+      savings: currentTheme?.colors?.primary || 'var(--color-primary)',
+      investment: currentTheme?.colors?.accent || 'var(--color-accent)',
+      current: palette[2] || '#7d8471',
+      loan: palette[3] || '#a6926a',
+      credit: palette[4] || '#c17f59',
     }
 
     if (systemColors[accountType]) {
@@ -424,7 +431,7 @@ export default function DashboardPage() {
       values: distributionValues,
       colors: distributionLabels.map(label => getAccountTypeColor(label)),
     }
-  }, [dashboardData, currentTheme])
+  }, [dashboardData, currentTheme, getAccountTypeColor])
 
   if (isLoading) {
     return (
@@ -537,9 +544,9 @@ export default function DashboardPage() {
                 const group = fullGroups.find(g => g.id === groupId)
                 if (!group) return null
 
-                const colors = ['var(--color-primary)', '#7d8471', '#c17f59']
+                const palette = currentTheme?.colors?.palette || ['#2d5a27', '#c17f59', '#7d8471']
                 const colorIndex = fullGroups.findIndex(g => g.id === groupId)
-                const color = colors[colorIndex % colors.length]
+                const color = palette[colorIndex % palette.length]
 
                 return (
                   <div
@@ -687,13 +694,11 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {distributionData.labels.map((label, i) => {
               const color = getAccountTypeColor(label)
-              // For backgrounds, use rgba with 0.12 opacity for muted effect
-              const bgColor = hexToRgba(getAccountTypeColor(label, true), 0.12)
               return (
                 <div
                   key={label}
-                  className="flex items-center justify-between p-2 rounded-lg transition-all duration-200 hover:shadow-sm"
-                  style={{ backgroundColor: bgColor }}
+                  className="flex items-center justify-between p-2 rounded-lg transition-all duration-200 hover:shadow-sm border border-border"
+                  style={{ backgroundColor: currentTheme?.colors?.primaryBg || 'rgba(45, 90, 39, 0.08)' }}
                 >
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 rounded-full shadow-sm" style={{ backgroundColor: color }}></div>
@@ -725,14 +730,17 @@ export default function DashboardPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {fullGroups.map((group, index) => {
-            const colors = ['var(--color-primary)', '#7d8471', '#c17f59']
-            const color = colors[index % colors.length]
+            const palette = currentTheme?.colors?.palette || ['#2d5a27', '#c17f59', '#7d8471']
+            const color = palette[index % palette.length]
 
             return (
               <div
                 key={group.id}
                 className="group relative p-5 rounded-xl bg-card border hover:border-opacity-50 hover:shadow-md cursor-pointer transition-all duration-300"
-                style={{ borderColor: index === 0 ? 'var(--color-primary)' : index === 1 ? 'rgba(125, 132, 113, 0.3)' : 'rgba(193, 127, 89, 0.3)' }}
+                style={{
+                  borderColor: color,
+                  opacity: 1
+                }}
                 onClick={() => setSelectedGroupId(group.id)}
               >
                 {/* Action buttons */}
@@ -821,7 +829,8 @@ export default function DashboardPage() {
 
       {/* Delete Confirmation Modal */}
       {groupToDelete && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setGroupToDelete(null)}>
+        <Portal>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setGroupToDelete(null)}>
           <div
             className="glass-card rounded-2xl p-8 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
@@ -857,6 +866,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+        </Portal>
       )}
     </div>
   )

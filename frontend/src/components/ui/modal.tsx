@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
+import { Portal } from '@/components/ui/portal'
 
 const modalVariants = cva('bg-card rounded-lg shadow-xl', {
   variants: {
@@ -57,14 +58,15 @@ export const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center p-4">
-        {/* Backdrop */}
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-          onClick={onClose}
-          aria-hidden="true"
-        />
+    <Portal>
+      <div className="fixed inset-0 z-50 overflow-y-auto">
+        <div className="flex min-h-screen items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={onClose}
+            aria-hidden="true"
+          />
 
         {/* Modal */}
         <div
@@ -104,5 +106,6 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
       </div>
     </div>
+    </Portal>
   )
 }

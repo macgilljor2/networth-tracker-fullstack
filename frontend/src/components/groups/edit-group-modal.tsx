@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { groupsService } from '@/lib/api/groups.service'
 import { AccountGroup } from '@/types'
+import { Portal } from '@/components/ui/portal'
 
 interface EditGroupModalProps {
   group: AccountGroup
@@ -42,7 +43,8 @@ export function EditGroupModal({ group, onClose, onSuccess }: EditGroupModalProp
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
+    <Portal>
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div
         className="glass-card rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -130,5 +132,6 @@ export function EditGroupModal({ group, onClose, onSuccess }: EditGroupModalProp
         </div>
       </div>
     </div>
+    </Portal>
   )
 }

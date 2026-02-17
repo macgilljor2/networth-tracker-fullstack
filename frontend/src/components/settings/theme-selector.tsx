@@ -16,12 +16,12 @@ const THEMES = [
     accent: '#2d5a27',
   },
   {
-    id: 'scandi',
-    name: 'Scandinavian Night',
-    description: 'Dark sophisticated with soft gold accents',
-    preview: 'linear-gradient(135deg, #d4a574 0%, #9db4a0 100%)',
-    bg: '#2a2f35',
-    accent: '#d4a574',
+    id: 'neon',
+    name: 'Neon Night',
+    description: 'Dark cyberpunk with vibrant neon accents',
+    preview: 'linear-gradient(135deg, #ff006e 0%, #00f5d4 100%)',
+    bg: '#0a0e27',
+    accent: '#ff006e',
   },
   {
     id: 'cappuccino',
@@ -30,6 +30,22 @@ const THEMES = [
     preview: 'linear-gradient(135deg, #6d5c4a 0%, #c17f59 100%)',
     bg: '#faf8f5',
     accent: '#6d5c4a',
+  },
+  {
+    id: 'cosmos',
+    name: 'Deep Cosmos',
+    description: 'Light neutrals with deep purple and navy',
+    preview: 'linear-gradient(135deg, #4c1d95 0%, #1e3a8a 100%)',
+    bg: '#f8fafc',
+    accent: '#4c1d95',
+  },
+  {
+    id: 'forest',
+    name: 'Forest Night',
+    description: 'Deep forest with earth tones, moss and autumn colors',
+    preview: 'linear-gradient(135deg, #2d5a27 0%, #c17f59 100%)',
+    bg: '#1a2e1a',
+    accent: '#2d5a27',
   },
 ]
 
@@ -41,7 +57,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-primary">Theme</h3>
       <p className="text-sm text-secondary mb-4">Choose your style - all elements adjust automatically</p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {THEMES.map((theme) => (
           <button
             key={theme.id}
